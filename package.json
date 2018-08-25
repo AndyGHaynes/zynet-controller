@@ -1,0 +1,16 @@
+{
+  "name": "zynet_controller",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@stamp/it": "^1.0.3",
+    "lodash": "^4.17.10",
+    "rpio": "^0.9.22"
+  }
+}
