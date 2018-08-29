@@ -2,15 +2,17 @@ const stampit = require('@stamp/it');
 
 const { GPIOValue } = require('../constants');
 
-const gpio = stampit({
+const GPIO = stampit({
   props: {
     gpio: null,
+    high: null,
+    low: null
   },
   methods: {
     gpioValue(value) {
       return {
-        [GPIOValue.HIGH]: this.gpio.HIGH,
-        [GPIOValue.LOW]: this.gpio.LOW,
+        [GPIOValue.HIGH]: this.high,
+        [GPIOValue.LOW]: this.low,
       }[value];
     },
     open(pin, value) {
@@ -25,4 +27,4 @@ const gpio = stampit({
   }
 });
 
-module.exports = gpio;
+module.exports = GPIO;

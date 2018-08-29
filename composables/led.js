@@ -1,9 +1,6 @@
-const pin = require('./pin');
+const Pin = require('./pin');
 
-const led = pin.compose({
-  init({ color }) {
-    this.color = color;
-  },
+const LED = Pin.compose({
   methods: {
     toggle() {
       this.isOn() ? this.off() : this.on();
@@ -11,4 +8,4 @@ const led = pin.compose({
   }
 });
 
-module.exports = led;
+module.exports = LED;

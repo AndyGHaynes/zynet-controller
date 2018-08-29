@@ -3,6 +3,13 @@ const GPIOValue = {
   LOW: Symbol('LOW'),
 };
 
+const LEDColor = {
+  BLUE: Symbol('BLUE'),
+  GREEN: Symbol('GREEN'),
+  RED: Symbol('RED'),
+  YELLOW: Symbol('YELLOW'),
+};
+
 const PinState = {
   INITIALIZED: Symbol('INITIALIZED'),
   CLOSED: Symbol('CLOSED'),
@@ -12,5 +19,6 @@ const PinState = {
 
 module.exports = {
   GPIOValue,
+  LEDColor,
   PinState,
 };

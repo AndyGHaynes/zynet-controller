@@ -1,11 +1,19 @@
 const rpio = require('rpio');
 
-const controller = require('./composables/controller');
+const Controller = require('./composables/controller');
+const { LEDColor } = require('./constants');
 
-const pi = controller.props({ gpio: rpio })();
-pi.createLED({ color: 'red', pin: 11 });
-pi.createLED({ color: 'green', pin: 12 });
-pi.createLED({ color: 'blue', pin: 13 });
+const pi = Controller.props({
+  gpio: rpio,
+  gpioHigh: rpio.HIGH,
+  gpioLow: rpio.LOW,
+})();
+pi.registerLEDs([
+  { color: LEDColor.RED, pin: 10 },
+  { color: LEDColor.YELLOW, pin: 11 },
+  { color: LEDColor.GREEN, pin: 12 },
+  { color: LEDColor.BLUE, pin: 13 },
+]);
 pi.toggleLEDs();
 pi.toggleLEDs();
 pi.shutdown();

@@ -5,7 +5,7 @@ const {
   PinState,
 } = require('../constants');
 
-const pin = stampit({
+const Pin = stampit({
   props: {
     gpio: null,
   },
@@ -40,4 +40,4 @@ const pin = stampit({
   }
 });
 
-module.exports = pin;
+module.exports = Pin;
