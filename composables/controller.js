@@ -8,32 +8,23 @@ const Controller = stampit({
   init() {
     this.leds = {};
     this.pins = [];
+    this.relays = [];
   },
   props: {
     debug: false,
   },
   methods: {
-    createLED(pin, color) {
-      return LED.props({
-        pin: this.createPin(pin),
-      })({ color });
-    },
     createPin(pin) {
       const newPin = Pin.props({
-        debug: this.debug
+        debug: this.debug,
       })({ pin });
       this.pins.push(newPin);
       return newPin;
     },
-    registerLEDs(leds) {
-      this.leds = _.reduce(
-        leds,
-        (ledArray, { pin, color }) => {
-          ledArray[color] = this.createLED(pin, color);
-          return ledArray;
-        },
-        {}
-      );
+    registerLED({ pin, color }) {
+      this.leds[color] = LED.props({
+        pin: this.createPin(pin),
+      })({ color });
     },
     shutdown() {
       this.leds = {};
