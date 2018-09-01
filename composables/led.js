@@ -1,9 +1,18 @@
-const Pin = require('./pin');
+const stampit = require('@stamp/it');
 
-const LED = Pin.compose({
+const LED = stampit({
+  props: {
+    pin: null,
+  },
   methods: {
+    on() {
+      this.pin.high();
+    },
+    off() {
+      this.pin.low();
+    },
     toggle() {
-      this.isOn() ? this.off() : this.on();
+      this.pin.isOn() ? this.off() : this.on();
     }
   }
 });

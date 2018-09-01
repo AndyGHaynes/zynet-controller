@@ -1,30 +1,29 @@
 const stampit = require('@stamp/it');
 const _ = require('lodash');
 
-const GPIO = require('./gpio');
 const LED = require('./led');
+const Pin = require('./pin');
 
 const Controller = stampit({
-  props: {
-    gpio: null,
-    gpioHigh: null,
-    gpioLow: null,
-  },
   init() {
-    this.leds = null;
+    this.leds = {};
+    this.pins = [];
+  },
+  props: {
+    debug: false,
   },
   methods: {
-    createGPIO() {
-      return GPIO.props({
-        gpio: this.gpio,
-        high: this.gpioHigh,
-        low: this.gpioLow,
-      })();
-    },
     createLED(pin) {
       return LED.props({
-        gpio: this.createGPIO(),
+        pin: this.createPin(pin),
+      })();
+    },
+    createPin(pin) {
+      const newPin = Pin.props({
+        debug: this.debug
       })({ pin });
+      this.pins.push(newPin);
+      return newPin;
     },
     registerLEDs(leds) {
       this.leds = _.reduce(
@@ -37,10 +36,14 @@ const Controller = stampit({
       );
     },
     shutdown() {
-      _.map(this.leds, (led) => led.close());
+      this.leds = {};
+      _.map(this.pins, (pin) => pin.close());
     },
     toggleLEDs() {
-      _.map(this.leds, (led) => led.toggle());
+      _.map(
+        _.keys(this.leds),
+        (color) => this.leds[color].toggle()
+      );
     },
   }
 });
