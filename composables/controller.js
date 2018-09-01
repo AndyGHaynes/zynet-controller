@@ -13,10 +13,10 @@ const Controller = stampit({
     debug: false,
   },
   methods: {
-    createLED(pin) {
+    createLED(pin, color) {
       return LED.props({
         pin: this.createPin(pin),
-      })();
+      })({ color });
     },
     createPin(pin) {
       const newPin = Pin.props({
@@ -29,7 +29,7 @@ const Controller = stampit({
       this.leds = _.reduce(
         leds,
         (ledArray, { pin, color }) => {
-          ledArray[color] = this.createLED(pin);
+          ledArray[color] = this.createLED(pin, color);
           return ledArray;
         },
         {}

@@ -1,19 +1,8 @@
-const stampit = require('@stamp/it');
+const PinToggle = require('./pin_toggle');
 
-const LED = stampit({
-  props: {
-    pin: null,
-  },
-  methods: {
-    on() {
-      this.pin.high();
-    },
-    off() {
-      this.pin.low();
-    },
-    toggle() {
-      this.pin.isOn() ? this.off() : this.on();
-    }
+const LED = PinToggle.compose({
+  init({ color }) {
+    this.color = color;
   }
 });
 
