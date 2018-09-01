@@ -3,6 +3,7 @@ const _ = require('lodash');
 
 const LED = require('./led');
 const Pin = require('./pin');
+const Relay = require('./relay');
 
 const Controller = stampit({
   init() {
@@ -15,9 +16,7 @@ const Controller = stampit({
   },
   methods: {
     createPin(pin) {
-      const newPin = Pin.props({
-        debug: this.debug,
-      })({ pin });
+      const newPin = Pin.props({ debug: this.debug })({ pin });
       this.pins.push(newPin);
       return newPin;
     },
@@ -25,6 +24,11 @@ const Controller = stampit({
       this.leds[color] = LED.props({
         pin: this.createPin(pin),
       })({ color });
+    },
+    registerRelay({ pin }) {
+      this.relays.push(Relay.props({
+        pin: this.createPin(pin),
+      })());
     },
     shutdown() {
       this.leds = {};
