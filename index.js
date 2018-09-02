@@ -22,4 +22,7 @@ _.each(relays, (relay) => pi.registerRelay(relay));
 pi.toggleLEDs();
 pi.toggleLEDs();
 pi.initializeThermometer();
+pi.initializePID({ k_p: 1.5, k_i: 1, k_d: 0.5, i_max: 3 });
+pi.setPIDTarget(152);
+pi.updateTemperature();
 pi.shutdown();

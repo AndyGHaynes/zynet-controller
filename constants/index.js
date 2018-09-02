@@ -5,6 +5,13 @@ const LEDColor = {
   YELLOW: 'YELLOW',
 };
 
+const PIDState = {
+  UNINITIALIZED: 'UNINITIALIZED',
+  READY: 'READY',
+  ON: 'ON',
+  OFF: 'OFF',
+};
+
 const PinState = {
   INITIALIZED: 'INITIALIZED',
   CLOSED: 'CLOSED',
@@ -14,5 +21,6 @@ const PinState = {
 
 module.exports = {
   LEDColor,
+  PIDState,
   PinState,
 };
