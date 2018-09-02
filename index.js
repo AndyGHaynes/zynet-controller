@@ -21,4 +21,5 @@ _.each(leds, (led) => pi.registerLED(led));
 _.each(relays, (relay) => pi.registerRelay(relay));
 pi.toggleLEDs();
 pi.toggleLEDs();
+pi.initializeThermometer();
 pi.shutdown();
