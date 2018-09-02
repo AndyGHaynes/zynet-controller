@@ -2,10 +2,10 @@ const stampit = require('@stamp/it');
 const rpio = require('rpio');
 
 const { PinState } = require('../constants');
+const EventLogger = require('./event_logger');
 
-const Pin = stampit({
+const Pin = stampit.compose(EventLogger, {
   props: {
-    debug: false,
     gpio: rpio,
     highValue: rpio.HIGH,
     lowValue: rpio.LOW,
@@ -39,9 +39,7 @@ const Pin = stampit({
       return this.state === PinState.HIGH;
     },
     setState(state) {
-      if (this.debug) {
-        console.log(`[pin ${this.pin}] ${this.state || 'null'} -> ${state}`);
-      }
+      this.logDebug(`[pin ${this.pin}] ${this.state || 'null'} -> ${state}`);
       this.state = state;
     },
   }

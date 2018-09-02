@@ -3,9 +3,10 @@ const Promise = require('bluebird');
 const ds18b20 = Promise.promisifyAll(require('ds18b20'));
 const _ = require('lodash');
 
-const Thermometer = stampit({
+const EventLogger = require('./event_logger');
+
+const Thermometer = stampit.compose(EventLogger, {
   props: {
-    debug: false,
     ds18b20,
   },
   init() {
@@ -13,14 +14,16 @@ const Thermometer = stampit({
   },
   methods: {
     initialize() {
+      this.logDebug('initializing thermometer');
       return this.ds18b20.sensorsAsync()
         .then((ids) => _.isArray(ids) && (this.sensorId = ids[0]))
-        .catch((e) => console.log(e));
+        .catch((e) => this.logError(e));
     },
     readTemperature() {
+      this.logDebug(`reading thermometer ${this.sensorId}`);
       return this.ds18b20.temperatureAsync(this.sensorId)
         .then((temperature) => this.sensorId && ((temperature * (9 / 5)) + 32))
-        .catch((e) => console.log(e));
+        .catch((e) => this.logError(e));
     }
   }
 });

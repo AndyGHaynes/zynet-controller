@@ -1,20 +1,18 @@
 const stampit = require('@stamp/it');
 const _ = require('lodash');
 
+const EventLogger = require('./event_logger');
 const LED = require('./led');
 const Pin = require('./pin');
 const Relay = require('./relay');
 const Thermometer = require('./thermometer');
 
-const Controller = stampit({
+const Controller = stampit.compose(EventLogger, {
   init() {
     this.leds = {};
     this.pins = [];
     this.relays = [];
-    this.thermometer = Thermometer.props({ debug: this.debug })();
-  },
-  props: {
-    debug: false,
+    this.thermometer = null;
   },
   methods: {
     createPin(pin) {
@@ -23,8 +21,9 @@ const Controller = stampit({
       return newPin;
     },
     initializeThermometer() {
+      this.thermometer = Thermometer.props({ debug: this.debug })();
       return this.thermometer.initialize()
-        .then((sensorId) => this.debug && console.log(`thermometer ${sensorId} online`))
+        .then((sensorId) => this.logDebug(`thermometer ${sensorId} online`))
         .catch((e) => console.log(e));
     },
     readTemperature() {
