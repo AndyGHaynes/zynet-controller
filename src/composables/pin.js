@@ -1,7 +1,7 @@
 const stampit = require('@stamp/it');
 const rpio = require('rpio');
 
-const { PinState } = require('../constants');
+const { PinState } = require('../constants/index');
 const EventLogger = require('./event_logger');
 
 const Pin = stampit.compose(EventLogger, {
