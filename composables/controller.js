@@ -3,18 +3,19 @@ const _ = require('lodash');
 
 const EventLogger = require('./event_logger');
 const LED = require('./led');
-const PID = require('./pid');
 const Pin = require('./pin');
 const Relay = require('./relay');
-const Thermometer = require('./thermometer');
+const TemperatureController = require('./temperature_controller');
 
 const Controller = stampit.compose(EventLogger, {
+  props: {
+    TemperatureController,
+  },
   init() {
     this.leds = {};
-    this.pid = null;
     this.pins = [];
     this.relays = [];
-    this.thermometer = null;
+    this.temperatureController = null;
   },
   methods: {
     createPin(pin) {
@@ -22,19 +23,13 @@ const Controller = stampit.compose(EventLogger, {
       this.pins.push(newPin);
       return newPin;
     },
-    initializePID(pidParams) {
-      this.pid = PID.props({ debug: this.debug })(pidParams);
-    },
-    initializeThermometer() {
-      this.thermometer = Thermometer.props({ debug: this.debug })();
-      return this.thermometer.initialize()
-        .then((sensorId) => this.logDebug(`thermometer ${sensorId} online`))
-        .catch(this.logError);
-    },
-    readTemperature() {
-      return this.thermometer.readTemperature()
-        .return()
-        .catch(this.logError);
+    initializeTemperatureController(pidParams, targetTemperature) {
+      this.temperatureController = this.TemperatureController(
+        pidParams,
+        this.relays,
+        targetTemperature
+      );
+      return this.temperatureController.initialize();
     },
     registerLED({ pin, color }) {
       this.leds[color] = LED.props({
@@ -46,9 +41,6 @@ const Controller = stampit.compose(EventLogger, {
         pin: this.createPin(pin),
       })());
     },
-    setPIDTarget(value) {
-      this.pid.setTarget(value);
-    },
     shutdown() {
       this.leds = {};
       _.map(this.pins, (pin) => pin.close());
@@ -58,10 +50,6 @@ const Controller = stampit.compose(EventLogger, {
         _.keys(this.leds),
         (color) => this.leds[color].toggle()
       );
-    },
-    updateTemperature() {
-      return this.readTemperature()
-        .then((temperature) => this.pid.setValue(temperature));
     },
   }
 });

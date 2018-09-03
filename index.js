@@ -16,7 +16,7 @@ const controller = {
   ],
 };
 
-const pidSettings = {
+const pidConfig = {
   [PIDParams.PROPORTIONAL_GAIN]: 1.5,
   [PIDParams.INTEGRAL_GAIN]: 1,
   [PIDParams.DERIVATIVE_GAIN]: 0.5,
@@ -34,8 +34,5 @@ _.each(controller.leds, (led) => pi.registerLED(led));
 _.each(controller.relays, (relay) => pi.registerRelay(relay));
 pi.toggleLEDs();
 pi.toggleLEDs();
-pi.initializeThermometer();
-pi.initializePID(pidSettings);
-pi.setPIDTarget(schedule.mashTemperature);
-pi.updateTemperature();
+pi.initializeTemperatureController(pidConfig, schedule.mashTemperature);
 pi.shutdown();
