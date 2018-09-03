@@ -29,12 +29,12 @@ const Controller = stampit.compose(EventLogger, {
       this.thermometer = Thermometer.props({ debug: this.debug })();
       return this.thermometer.initialize()
         .then((sensorId) => this.logDebug(`thermometer ${sensorId} online`))
-        .catch((e) => console.log(e));
+        .catch(this.logError);
     },
     readTemperature() {
       return this.thermometer.readTemperature()
         .return()
-        .catch((e) => console.log(e));
+        .catch(this.logError);
     },
     registerLED({ pin, color }) {
       this.leds[color] = LED.props({
@@ -60,8 +60,8 @@ const Controller = stampit.compose(EventLogger, {
       );
     },
     updateTemperature() {
-      this.readTemperature()
-        .then((temperature) => this.pid.setValue(temperature))
+      return this.readTemperature()
+        .then((temperature) => this.pid.setValue(temperature));
     },
   }
 });

@@ -17,13 +17,13 @@ const Thermometer = stampit.compose(EventLogger, {
       this.logDebug('initializing thermometer');
       return this.ds18b20.sensorsAsync()
         .then((ids) => _.isArray(ids) && (this.sensorId = ids[0]))
-        .catch((e) => this.logError(e));
+        .catch(this.logError);
     },
     readTemperature() {
       this.logDebug(`reading thermometer ${this.sensorId}`);
       return this.ds18b20.temperatureAsync(this.sensorId)
         .then((temperature) => this.sensorId && ((temperature * (9 / 5)) + 32))
-        .catch((e) => this.logError(e));
+        .catch(this.logError);
     }
   }
 });

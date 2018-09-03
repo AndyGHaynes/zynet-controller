@@ -13,6 +13,7 @@ const Pin = stampit.compose(EventLogger, {
     output: rpio.OUTPUT,
   },
   init({ pin }) {
+    this.logDebug(`creating pin ${pin}`);
     this.pin = pin;
     this.state = null;
     this.setState(PinState.INITIALIZED);
