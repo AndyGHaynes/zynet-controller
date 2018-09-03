@@ -1,9 +1,9 @@
 const stampit = require('@stamp/it');
 const _ = require('lodash');
 
-const EventLogger = require('./event_logger');
+const EventLogger = require('../composables/event_logger');
 const LED = require('./led');
-const Pin = require('./pin');
+const Pin = require('../composables/pin');
 const Relay = require('./relay');
 const TemperatureController = require('./temperature_controller');
 

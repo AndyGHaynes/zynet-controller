@@ -1,8 +1,8 @@
 const stampit = require('@stamp/it');
 const _ = require('lodash');
 
-const { PIDState } = require('../constants');
-const EventLogger = require('./event_logger');
+const { PIDState } = require('../constants/index');
+const EventLogger = require('../composables/event_logger');
 const PID = require('./pid');
 const Thermometer = require('./thermometer');
 

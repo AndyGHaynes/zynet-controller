@@ -1,4 +1,4 @@
-const PinToggle = require('./pin_toggle');
+const PinToggle = require('../composables/pin_toggle');
 
 const Relay = PinToggle.compose();
 

@@ -1,6 +1,6 @@
 const _ = require('lodash');
 
-const Controller = require('./composables/controller');
+const Controller = require('./controller/controller');
 const { LEDColor, PIDParams } = require('./constants');
 
 const controller = {

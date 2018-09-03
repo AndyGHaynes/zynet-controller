@@ -3,7 +3,7 @@ const Promise = require('bluebird');
 const ds18b20 = Promise.promisifyAll(require('ds18b20'));
 const _ = require('lodash');
 
-const EventLogger = require('./event_logger');
+const EventLogger = require('../composables/event_logger');
 
 const Thermometer = stampit.compose(EventLogger, {
   props: {
