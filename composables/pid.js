@@ -1,16 +1,21 @@
 const stampit = require('@stamp/it');
 const PIDController = require('node-pid-controller');
 
-const { PIDState } = require('../constants');
+const { PIDParams, PIDState } = require('../constants');
 const EventLogger = require('./event_logger');
 
 const PID = stampit.compose(EventLogger, {
   props: {
-    pidController: PIDController,
+    PIDController,
   },
-  init({ k_p, k_i, k_d, i_max }) {
+  init(pidParams) {
     this.lastCorrection = null;
-    this.pid = new this.pidController({ k_p, k_i, k_d, i_max });
+    this.pid = new this.PIDController({
+      k_p: pidParams[PIDParams.PROPORTIONAL_GAIN],
+      k_i: pidParams[PIDParams.INTEGRAL_GAIN],
+      k_d: pidParams[PIDParams.DERIVATIVE_GAIN],
+      i_max: pidParams[PIDParams.INTEGRAL_GAIN],
+    });
     this.setpoint = null;
     this.value = null;
   },

@@ -5,6 +5,13 @@ const LEDColor = {
   YELLOW: 'LED_COLOR/YELLOW',
 };
 
+const PIDParams = {
+  PROPORTIONAL_GAIN: 'PID/PROPORTIONAL_GAIN',
+  INTEGRAL_GAIN: 'PID/INTEGRAL_GAIN',
+  DERIVATIVE_GAIN: 'PID/DERIVATIVE_GAIN',
+  MAX_INTEGRAL: 'PID/MAX_INTEGRAL',
+};
+
 const PIDState = {
   UNINITIALIZED: 'PID_STATE/UNINITIALIZED',
   READY: 'PID_STATE/READY',
@@ -21,6 +28,7 @@ const PinState = {
 
 module.exports = {
   LEDColor,
+  PIDParams,
   PIDState,
   PinState,
 };

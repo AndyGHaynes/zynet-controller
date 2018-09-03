@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 const Controller = require('./composables/controller');
-const { LEDColor } = require('./constants');
+const { LEDColor, PIDParams } = require('./constants');
 
 const controller = {
   leds: [
@@ -17,10 +17,10 @@ const controller = {
 };
 
 const pidSettings = {
-  k_p: 1.5,
-  k_i: 1,
-  k_d: 0.5,
-  i_max: 3,
+  [PIDParams.PROPORTIONAL_GAIN]: 1.5,
+  [PIDParams.INTEGRAL_GAIN]: 1,
+  [PIDParams.DERIVATIVE_GAIN]: 0.5,
+  [PIDParams.MAX_INTEGRAL]: 3,
 };
 
 const schedule = {

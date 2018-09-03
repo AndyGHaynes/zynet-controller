@@ -22,8 +22,8 @@ const Controller = stampit.compose(EventLogger, {
       this.pins.push(newPin);
       return newPin;
     },
-    initializePID({ k_p, k_i, k_d, i_max }) {
-      this.pid = PID.props({ debug: this.debug })({ k_p, k_i, k_d, i_max });
+    initializePID(pidParams) {
+      this.pid = PID.props({ debug: this.debug })(pidParams);
     },
     initializeThermometer() {
       this.thermometer = Thermometer.props({ debug: this.debug })();
