@@ -20,11 +20,7 @@ const Controller = stampit.compose(EventLogger, {
   },
   methods: {
     registerPin(pin) {
-      const newPin = this.pinController.registerPin(pin);
-      if (newPin === null) {
-        throw new Error(`Controller could not register pin ${pin}`);
-      }
-      return newPin;
+      return this.pinController.registerPin(pin);
     },
     initializeTemperatureController(pidParams, targetTemperature) {
       this.temperatureController = this.TemperatureController(
