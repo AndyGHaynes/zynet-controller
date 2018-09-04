@@ -1,3 +1,8 @@
+const GPIOType = {
+  INPUT: 'GPIO_TYPE/INPUT',
+  OUTPUT: 'GPIO_TYPE/OUTPUT',
+};
+
 const LEDColor = {
   BLUE: 'LED_COLOR/BLUE',
   GREEN: 'LED_COLOR/GREEN',
@@ -28,6 +33,7 @@ const PinState = {
 };
 
 module.exports = {
+  GPIOType,
   LEDColor,
   PIDParams,
   PIDState,
