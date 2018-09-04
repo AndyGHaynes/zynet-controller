@@ -17,6 +17,7 @@ const PIDState = {
   READY: 'PID_STATE/READY',
   ON: 'PID_STATE/ON',
   OFF: 'PID_STATE/OFF',
+  ERROR: 'PID_STATE/ERROR',
 };
 
 const PinState = {
