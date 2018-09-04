@@ -1,4 +1,5 @@
 const stampit = require('@stamp/it');
+const _ = require('lodash');
 const rpio = require('rpio');
 
 const { PinState } = require('../constants/index');
@@ -14,6 +15,9 @@ const Pin = stampit.compose(EventLogger, {
   },
   init({ pin }) {
     this.logDebug(`creating pin ${pin}`);
+    if (_.isNil(pin)) {
+      throw new Error('Cannot initialize pin without pin index');
+    }
     this.pin = pin;
     this.state = null;
     this.setState(PinState.INITIALIZED);
@@ -24,19 +28,36 @@ const Pin = stampit.compose(EventLogger, {
       this.setState(PinState.LOW);
     },
     close() {
+      if (this.state === PinState.INITIALIZED) {
+        throw new Error('Cannot close pin before opening');
+      }
       this.gpio.close(this.pin);
       this.setState(PinState.CLOSED);
     },
+    write(gpioValue) {
+      if (gpioValue !== this.highValue && gpioValue !== this.lowValue) {
+        throw new Error(`Cannot set pin to ${gpioValue}`);
+      } else if (!this.isOpen()) {
+        throw new Error(`Cannot write to pin ${this.pin} in state ${this.state}`);
+      }
+      this.gpio.write(this.pin, gpioValue);
+    },
     high() {
-      this.gpio.write(this.pin, this.highValue);
+      this.write(this.highValue);
       this.setState(PinState.HIGH);
     },
     low() {
-      this.gpio.write(this.pin, this.lowValue);
+      this.write(this.lowValue);
       this.setState(PinState.LOW);
+    },
+    isOff() {
+      return this.state === PinState.LOW;
     },
     isOn() {
       return this.state === PinState.HIGH;
+    },
+    isOpen() {
+      return this.isOn() || this.isOff();
     },
     setState(state) {
       this.logDebug(`[pin ${this.pin}] ${this.state || 'null'} -> ${state}`);
