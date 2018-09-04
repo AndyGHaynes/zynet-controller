@@ -6,7 +6,7 @@ chai.use(chaiAsPromised);
 const { expect } = chai;
 chai.should();
 
-const Thermometer = require('./thermometer');
+const Thermometer = require('../thermometer');
 
 const SENSOR_ID = 'SENSOR_ID';
 const TEMPERATURE = 50;

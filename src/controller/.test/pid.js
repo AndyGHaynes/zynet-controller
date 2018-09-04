@@ -6,8 +6,8 @@ chai.use(chaiAsPromised);
 const { expect } = chai;
 chai.should();
 
-const { PIDState } = require('../constants');
-const PID = require('./pid');
+const { PIDState } = require('../../constants/index');
+const PID = require('../pid');
 
 const PID_TARGET = 100;
 const PID_VALUE = 50;
