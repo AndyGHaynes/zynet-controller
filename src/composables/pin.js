@@ -17,7 +17,6 @@ const Pin = stampit.compose(EventLogger, {
     this.pin = pin;
     this.state = null;
     this.setState(PinState.INITIALIZED);
-    this.open();
   },
   methods: {
     open() {

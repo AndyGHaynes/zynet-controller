@@ -3,24 +3,27 @@ const _ = require('lodash');
 
 const EventLogger = require('../composables/event_logger');
 const LED = require('./led');
-const Pin = require('../composables/pin');
+const PinController = require('./pin_controller');
 const Relay = require('./relay');
 const TemperatureController = require('./temperature_controller');
 
 const Controller = stampit.compose(EventLogger, {
   props: {
+    PinController,
     TemperatureController,
   },
   init() {
     this.leds = {};
-    this.pins = [];
     this.relays = [];
+    this.pinController = PinController.props({ debug: this.debug })();
     this.temperatureController = null;
   },
   methods: {
-    createPin(pin) {
-      const newPin = Pin.props({ debug: this.debug })({ pin });
-      this.pins.push(newPin);
+    registerPin(pin) {
+      const newPin = this.pinController.registerPin(pin);
+      if (newPin === null) {
+        throw new Error(`Controller could not register pin ${pin}`);
+      }
       return newPin;
     },
     initializeTemperatureController(pidParams, targetTemperature) {
@@ -33,17 +36,17 @@ const Controller = stampit.compose(EventLogger, {
     },
     registerLED({ pin, color }) {
       this.leds[color] = LED.props({
-        pin: this.createPin(pin),
+        pin: this.registerPin(pin),
       })({ color });
     },
     registerRelay({ pin }) {
       this.relays.push(Relay.props({
-        pin: this.createPin(pin),
+        pin: this.registerPin(pin),
       })());
     },
     shutdown() {
       this.leds = {};
-      _.map(this.pins, (pin) => pin.close());
+      this.pinController.disposeAll();
     },
     toggleLEDs() {
       _.map(
