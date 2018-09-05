@@ -50,6 +50,9 @@ const Pin = stampit.compose(EventLogger, {
       this.write(this.lowValue);
       this.setState(PinState.LOW);
     },
+    isClosed() {
+      return this.state === PinState.CLOSED;
+    },
     isOff() {
       return this.state === PinState.LOW;
     },
