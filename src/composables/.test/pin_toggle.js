@@ -1,9 +1,7 @@
-const chai = require('chai');
+const { assert } = require('chai');
 const sinon = require('sinon');
 
 const PinToggle = require('../pin_toggle');
-
-const { expect } = chai;
 
 const MockPinToggle = PinToggle.props({
   pin: {
@@ -14,18 +12,18 @@ const MockPinToggle = PinToggle.props({
 
 describe('PinToggle', () => {
   describe('on', () => {
-    it(`should write high to the pin`, () => {
+    it('writes high to the pin', () => {
       const pinToggle = MockPinToggle();
       pinToggle.on();
-      expect(pinToggle.pin.high.called).to.be.true;
+      assert(pinToggle.pin.high.called);
     });
   });
 
   describe('off', () => {
-    it(`should write low to the pin`, () => {
+    it('writes low to the pin', () => {
       const pinToggle = MockPinToggle();
       pinToggle.off();
-      expect(pinToggle.pin.low.called).to.be.true;
+      assert(pinToggle.pin.low.called);
     });
   });
 });

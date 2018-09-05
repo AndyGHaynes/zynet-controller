@@ -1,13 +1,10 @@
-const chai = require('chai');
+const { assert } = require('chai');
 const sinon = require('sinon');
 
 const { GPIOType, PinState } = require('../../constants/index');
 const Pin = require('../pin');
 
-const { expect } = chai;
-
 const PIN_NUMBER = 10;
-
 const SilentPin = Pin.props({ error: false });
 const MockPin = SilentPin.props({
   gpio: {
@@ -36,102 +33,102 @@ const BrokePin = SilentPin.props({
 
 describe('Pin', () => {
   describe('initialization', () => {
-    it(`should be created with state ${PinState.INITIALIZED}`, () => {
+    it(`is created in state ${PinState.INITIALIZED}`, () => {
       const pin = MockPin({ pin: PIN_NUMBER });
-      expect(pin.state).to.equal(PinState.INITIALIZED);
+      assert.equal(pin.state, PinState.INITIALIZED);
     });
 
-    it(`should be created with its pin number set`, () => {
+    it('is created with its pin number set', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
-      expect(pin.pin).to.equal(PIN_NUMBER);
+      assert.equal(pin.pin, PIN_NUMBER);
     });
 
-    it(`should throw when created without a pin number`, () => {
-      expect(() => Pin()).to.throw();
+    it('throws when created without a pin number', () => {
+      assert.throws(() => Pin());
     });
   });
 
   describe('open', () => {
-    it('should open the GPIO address', () => {
+    it('opens the GPIO address', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
       pin.open();
-      expect(pin.gpio.open.called).to.be.true;
+      assert(pin.gpio.open.calledOnce);
     });
 
-    it(`should be opened in state ${PinState.LOW}`, () => {
+    it(`is opened in state ${PinState.LOW}`, () => {
       const pin = MockPin({ pin: PIN_NUMBER });
       pin.open();
-      expect(pin.state).to.equal(PinState.LOW);
+      assert.equal(pin.state, PinState.LOW);
     });
 
-    it('should throw when a GPIO exception is thrown', () => {
+    it('throws when a GPIO exception is thrown', () => {
       const pin = BrokePin({ pin: PIN_NUMBER });
-      expect(() => pin.open()).to.throw();
+      assert.throws(() => pin.open());
     });
   });
 
   describe('close', () => {
-    it('should close the GPIO address', () => {
+    it('closes the GPIO address', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
       pin.open();
       pin.close();
-      expect(pin.gpio.close.called).to.be.true;
+      assert(pin.gpio.close.calledOnce);
     });
 
-    it(`should be in state ${PinState.CLOSED} after closing`, () => {
+    it(`is in state ${PinState.CLOSED} after closing`, () => {
       const pin = MockPin({ pin: PIN_NUMBER });
       pin.open();
       pin.close();
-      expect(pin.state).to.equal(PinState.CLOSED);
+      assert.equal(pin.state, PinState.CLOSED);
     });
 
-    it('should throw if closed before opening', () => {
+    it('throws if closed before opening', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
-      expect(() => pin.close()).to.throw();
+      assert.throws(() => pin.close());
     });
 
-    it('should throw when a GPIO exception is thrown', () => {
+    it('throws when a GPIO exception is thrown', () => {
       const pin = BrokePin({ pin: PIN_NUMBER });
-      expect(() => pin.close()).to.throw();
+      assert.throws(() => pin.close());
     });
   });
 
   describe('write', () => {
-    it('should throw when an invalid is provided', () => {
+    it('throws when an invalid is provided', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
       pin.open();
-      expect(() => pin.write('NONCE')).to.throw();
+      assert.throws(() => pin.write('NONCE'));
     });
 
-    it('should throw when pin has not been opened', () => {
+    it('throws when pin has not been opened', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
-      expect(() => pin.high()).to.throw();
+      assert.throws(() => pin.high());
     });
 
-    it('should throw when a GPIO exception is thrown', () => {
+    it('throws when a GPIO exception is thrown', () => {
       const pin = BrokePin.props({
         gpio: { open: sinon.stub() }
       })({ pin: PIN_NUMBER });
       pin.open();
-      expect(() => pin.high()).to.throw();
+      assert.throws(() => pin.high());
     });
   });
 
   describe('high', () => {
-    it('should write to GPIO with its high value', () => {
+    it('writes to GPIO with its high value', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
       pin.open();
       pin.high();
-      expect(pin.gpio.write.calledWith(PIN_NUMBER, pin.highValue)).to.be.true;
+      assert(pin.gpio.write.calledWith(PIN_NUMBER, pin.highValue));
     });
   });
 
   describe('low', () => {
-    it('should write to GPIO with its low value', () => {
+    it('writes to GPIO with its low value', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
       pin.open();
       pin.low();
-      expect(pin.gpio.write.calledWith(PIN_NUMBER, pin.lowValue)).to.be.true;
+      assert(pin.gpio.write.calledWith(PIN_NUMBER, pin.lowValue));
     });
   });
 });

@@ -2,11 +2,10 @@ const Promise = require('bluebird');
 const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 
-chai.use(chaiAsPromised);
-const { expect } = chai;
-chai.should();
-
 const Thermometer = require('../thermometer');
+
+chai.use(chaiAsPromised);
+const { assert } = chai;
 
 const SENSOR_ID = 'SENSOR_ID';
 const TEMPERATURE = 50;
@@ -29,25 +28,27 @@ const BrokeThermometer = SilentThermometer.props({
 
 describe('Thermometer', () => {
   describe('initialize', () => {
-    it('should set sensor ID upon initialization', () => {
+    it('sets sensor ID upon initialization', () => {
       const thermometer = ValidThermometer();
       return thermometer.initialize()
-        .then(() => expect(thermometer.sensorId).to.equal(SENSOR_ID));
+        .then(() => assert.equal(thermometer.sensorId, SENSOR_ID));
     });
-    it('should throw on failed initialization', () => {
+
+    it('throws on failed initialization', () => {
       const thermometer = BrokeThermometer();
-      return thermometer.initialize().should.be.rejected;
+      return assert.isRejected(thermometer.initialize());
     });
   });
 
   describe('readTemperature', () => {
-    it('should return the current temperature', () => {
+    it('returns the current temperature', () => {
       const thermometer = ValidThermometer();
-      return thermometer.readTemperature().should.eventually.equal(TEMPERATURE);
+      return assert.becomes(thermometer.readTemperature(), TEMPERATURE);
     });
-    it('should return null when an exception is thrown', () => {
+
+    it('returns null when an exception is thrown', () => {
       const thermometer = BrokeThermometer();
-      return thermometer.readTemperature().should.eventually.be.null;
+      return assert.becomes(thermometer.readTemperature(), null);
     });
   });
 });
