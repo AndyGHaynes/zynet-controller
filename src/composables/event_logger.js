@@ -3,14 +3,14 @@ const stampit = require('@stamp/it');
 const EventLogger = stampit({
   props: {
     debug: false,
-    error: true,
+    test: false,
   },
   methods: {
     logDebug(...params) {
       this.debug && console.debug(...params);
     },
     logError(...params) {
-      this.error && console.error(...params);
+      !this.test && console.error(...params);
     },
   }
 });

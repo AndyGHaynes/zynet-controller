@@ -15,7 +15,7 @@ const errorPIDController = sinon.stub();
 errorPIDController.prototype.setTarget = sinon.stub().throws();
 errorPIDController.prototype.update = sinon.stub().throws();
 
-const SilentPID = PID.props({ error: false });
+const SilentPID = PID.props({ test: true });
 const ValidPID = SilentPID.props({
   PIDController: mockPIDController,
 });

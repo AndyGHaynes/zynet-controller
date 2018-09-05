@@ -10,7 +10,7 @@ const { assert } = chai;
 const SENSOR_ID = 'SENSOR_ID';
 const TEMPERATURE = 50;
 
-const SilentThermometer = Thermometer.props({ error: false });
+const SilentThermometer = Thermometer.props({ test: true });
 const ValidThermometer = SilentThermometer.props({
   ds18b20: {
     sensorsAsync: () => Promise.resolve([SENSOR_ID]),

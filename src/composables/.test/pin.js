@@ -5,7 +5,7 @@ const { GPIOType, PinState } = require('../../constants/index');
 const Pin = require('../pin');
 
 const PIN_NUMBER = 10;
-const SilentPin = Pin.props({ error: false });
+const SilentPin = Pin.props({ test: true });
 const MockPin = SilentPin.props({
   gpio: {
     open: sinon.spy(),

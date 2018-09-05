@@ -6,7 +6,7 @@ const PinController = require('../pin_controller');
 
 const PIN_NUMBER = 10;
 
-const SilentPinController = PinController.props({ error: false });
+const SilentPinController = PinController.props({ test: true });
 
 describe('PinController', () => {
   let MockPinController;
