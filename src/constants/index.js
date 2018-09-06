@@ -10,6 +10,13 @@ const LEDColor = {
   YELLOW: 'LED_COLOR/YELLOW',
 };
 
+const LEDType = {
+  DATA: 'LED_TYPE/DATA',
+  ERROR: 'LED_TYPE/ERROR',
+  SUCCESS: 'LED_TYPE/SUCCESS',
+  WARNING: 'LED_TYPE/WARNING',
+};
+
 const PIDParams = {
   PROPORTIONAL_GAIN: 'PID/PROPORTIONAL_GAIN',
   INTEGRAL_GAIN: 'PID/INTEGRAL_GAIN',
@@ -35,6 +42,7 @@ const PinState = {
 module.exports = {
   GPIOType,
   LEDColor,
+  LEDType,
   PIDParams,
   PIDState,
   PinState,

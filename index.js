@@ -3,7 +3,7 @@ const _ = require('lodash');
 const Controller = require('./src/controller/controller');
 const { LEDColor, PIDParams } = require('./src/constants');
 
-const controller = {
+const controllerConfig = {
   leds: [
     { color: LEDColor.RED, pin: 10 },
     { color: LEDColor.YELLOW, pin: 11 },
@@ -28,11 +28,9 @@ const schedule = {
 };
 
 const pi = Controller.props({
+  config: controllerConfig,
   debug: true,
 })();
-_.each(controller.leds, (led) => pi.registerLED(led));
-_.each(controller.relays, (relay) => pi.registerRelay(relay));
-pi.toggleLEDs();
-pi.toggleLEDs();
+pi.leds.success();
 pi.initializeTemperatureController(pidConfig, schedule.mashTemperature);
 pi.shutdown();
