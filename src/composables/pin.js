@@ -12,6 +12,8 @@ const Pin = stampit.compose(EventLogger, {
     lowValue: rpio.LOW,
     input: rpio.INPUT,
     output: rpio.OUTPUT,
+    pinPreserve: rpio.PIN_PRESERVE,
+    pinReset: rpio.PIN_RESET,
   },
   init({ pin }) {
     this.logDebug(`creating pin ${pin}`);
@@ -28,19 +30,21 @@ const Pin = stampit.compose(EventLogger, {
       this.setState(PinState.LOW);
     },
     close() {
-      if (this.state === PinState.INITIALIZED) {
-        throw new Error('Cannot close pin before opening');
-      }
-      this.gpio.close(this.pin);
+      this.gpio.close(this.pin, this.pinPreserve);
       this.setState(PinState.CLOSED);
     },
     write(gpioValue) {
-      if (gpioValue !== this.highValue && gpioValue !== this.lowValue) {
-        throw new Error(`Cannot set pin to ${gpioValue}`);
-      } else if (!this.isOpen()) {
-        throw new Error(`Cannot write to pin ${this.pin} in state ${this.state}`);
+      try {
+        this.open();
+        if (gpioValue !== this.highValue && gpioValue !== this.lowValue) {
+          throw new Error(
+            `Cannot set pin to ${gpioValue}, valid values are { HIGH: ${this.highValue}, LOW: ${this.lowValue} }`
+          );
+        }
+        this.gpio.write(this.pin, gpioValue);
+      } finally {
+        this.close();
       }
-      this.gpio.write(this.pin, gpioValue);
     },
     high() {
       this.write(this.highValue);
@@ -50,17 +54,8 @@ const Pin = stampit.compose(EventLogger, {
       this.write(this.lowValue);
       this.setState(PinState.LOW);
     },
-    isClosed() {
-      return this.state === PinState.CLOSED;
-    },
-    isOff() {
-      return this.state === PinState.LOW;
-    },
     isOn() {
       return this.state === PinState.HIGH;
-    },
-    isOpen() {
-      return this.isOn() || this.isOff();
     },
     setState(state) {
       this.logDebug(`[pin ${this.pin}] ${this.state || 'null'} -> ${state}`);

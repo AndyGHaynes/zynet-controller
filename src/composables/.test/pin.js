@@ -82,11 +82,6 @@ describe('Pin', () => {
       assert.equal(pin.state, PinState.CLOSED);
     });
 
-    it('throws if closed before opening', () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
-      assert.throws(() => pin.close());
-    });
-
     it('throws when a GPIO exception is thrown', () => {
       const pin = BrokePin({ pin: PIN_NUMBER });
       assert.throws(() => pin.close());
@@ -94,15 +89,19 @@ describe('Pin', () => {
   });
 
   describe('write', () => {
-    it('throws when an invalid is provided', () => {
+    it('throws when an invalid value is provided', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
       pin.open();
       assert.throws(() => pin.write('NONCE'));
     });
 
-    it('throws when pin has not been opened', () => {
+    it('opens the pin before writing and closes it after returning', () => {
       const pin = MockPin({ pin: PIN_NUMBER });
-      assert.throws(() => pin.high());
+      sinon.spy(pin, 'open');
+      sinon.spy(pin, 'close');
+      pin.write(pin.highValue);
+      assert(pin.open.calledBefore(pin.gpio.write), 'calls GPIO open before writing');
+      assert(pin.close.calledAfter(pin.gpio.write), 'calls GPIO close after writing');
     });
 
     it('throws when a GPIO exception is thrown', () => {

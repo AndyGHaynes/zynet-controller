@@ -13,21 +13,17 @@ const PinController = stampit.compose(EventLogger, {
   },
   methods: {
     disposeAll() {
-      for (let i = 0; i < this.pins.length; i++) {
-        this.disposePin(this.pins[i]);
-      }
+      _.forEach(this.pins, (pin) => this.disposePin(pin));
     },
     disposePin(pin) {
       try {
         _.pull(this.pins, pin);
-        pin.close();
       } catch (e) {
         this.logError(e);
       }
     },
     registerPin(pinNumber) {
       const pin = this.Pin.props({ debug: this.debug })({ pin: pinNumber });
-      pin.open();
       this.pins.push(pin);
       return pin;
     },
