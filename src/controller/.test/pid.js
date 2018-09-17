@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const sinon = require('sinon');
 
-const { PIDState } = require('../../constants/index');
+const { PIDState } = require('../../constants');
 const PID = require('../pid');
 
 const PID_TARGET = 100;

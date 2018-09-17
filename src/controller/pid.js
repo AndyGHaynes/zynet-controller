@@ -1,7 +1,7 @@
 const stampit = require('@stamp/it');
 const PIDController = require('node-pid-controller');
 
-const { PIDParams, PIDState } = require('../constants/index');
+const { PIDParams, PIDState } = require('../constants');
 const EventLogger = require('../composables/event_logger');
 
 const PID = stampit.compose(EventLogger, {
