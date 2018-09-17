@@ -1,8 +1,9 @@
 const stampit = require('@stamp/it');
+const Promise = require('bluebird');
 const _ = require('lodash');
-const rpio = require('rpio');
+const rpio = Promise.promisifyAll(require('rpio'));
 
-const { PinState } = require('../constants/index');
+const { PinState } = require('../constants');
 const EventLogger = require('./event_logger');
 
 const Pin = stampit.compose(EventLogger, {
@@ -26,33 +27,29 @@ const Pin = stampit.compose(EventLogger, {
   },
   methods: {
     open() {
-      this.gpio.open(this.pin, this.output, this.lowValue);
-      this.setState(PinState.LOW);
+      return Promise.resolve(this.gpio.openAsync(this.pin, this.output, this.lowValue))
+        .disposer(() => this.close());
     },
     close() {
-      this.gpio.close(this.pin, this.pinPreserve);
-      this.setState(PinState.CLOSED);
+      return this.gpio.closeAsync(this.pin, this.pinPreserve);
     },
     write(gpioValue) {
-      try {
-        this.open();
+      return Promise.using(this.open(), () => {
         if (gpioValue !== this.highValue && gpioValue !== this.lowValue) {
           throw new Error(
             `Cannot set pin to ${gpioValue}, valid values are { HIGH: ${this.highValue}, LOW: ${this.lowValue} }`
           );
         }
-        this.gpio.write(this.pin, gpioValue);
-      } finally {
-        this.close();
-      }
+        return this.gpio.writeAsync(this.pin, gpioValue);
+      });
     },
     high() {
-      this.write(this.highValue);
-      this.setState(PinState.HIGH);
+      return this.write(this.highValue)
+        .then(() => this.setState(PinState.HIGH));
     },
     low() {
-      this.write(this.lowValue);
-      this.setState(PinState.LOW);
+      return this.write(this.lowValue)
+        .then(() => this.setState(PinState.LOW));
     },
     isOn() {
       return this.state === PinState.HIGH;

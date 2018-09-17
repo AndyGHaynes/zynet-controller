@@ -6,13 +6,13 @@ const PinToggle = stampit({
   },
   methods: {
     on() {
-      this.pin.high();
+      return this.pin.high();
     },
     off() {
-      this.pin.low();
+      return this.pin.low();
     },
     toggle() {
-      this.pin.isOn() ? this.off() : this.on();
+      return this.pin.isOn() ? this.off() : this.on();
     }
   }
 });

@@ -1,45 +1,45 @@
-const { assert } = require('chai');
+const Promise = require('bluebird');
+const chai = require('chai');
+const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 
-const { GPIOType, PinState } = require('../../constants/index');
+const { GPIOType, PinState } = require('../../constants');
 const Pin = require('../pin');
+
+chai.use(chaiAsPromised);
+const { assert } = chai;
+
+const mockGPIOMethod = (rejects) =>
+  rejects
+    ? sinon.stub().rejects()
+    : sinon.stub().resolves();
 
 const PIN_NUMBER = 10;
 const SilentPin = Pin.props({ test: true });
-const MockPin = SilentPin.props({
+const mockPin = (rejects) => SilentPin.props({
   gpio: {
-    open: sinon.spy(),
-    close: sinon.spy(),
-    read: sinon.spy(),
-    write: sinon.spy(),
+    openAsync: mockGPIOMethod(rejects),
+    closeAsync: mockGPIOMethod(rejects),
+    readAsync: mockGPIOMethod(rejects),
+    writeAsync: mockGPIOMethod(rejects),
   },
   highValue: PinState.HIGH,
   lowValue: PinState.LOW,
   input: GPIOType.INPUT,
   output: GPIOType.OUTPUT,
 });
-const BrokePin = SilentPin.props({
-  gpio: {
-    open: sinon.stub().throws(),
-    close: sinon.stub().throws(),
-    read: sinon.stub().throws(),
-    write: sinon.stub().throws(),
-  },
-  highValue: PinState.HIGH,
-  lowValue: PinState.LOW,
-  input: GPIOType.INPUT,
-  output: GPIOType.OUTPUT,
-});
+const getMockPin = (props) => mockPin(false)(props); 
+const getBrokePin = (props) => mockPin(true)(props); 
 
 describe('Pin', () => {
   describe('initialization', () => {
     it(`is created in state ${PinState.INITIALIZED}`, () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
+      const pin = getMockPin({ pin: PIN_NUMBER });
       assert.equal(pin.state, PinState.INITIALIZED);
     });
 
     it('is created with its pin number set', () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
+      const pin = getMockPin({ pin: PIN_NUMBER });
       assert.equal(pin.pin, PIN_NUMBER);
     });
 
@@ -50,84 +50,78 @@ describe('Pin', () => {
 
   describe('open', () => {
     it('opens the GPIO address', () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
-      pin.open();
-      assert(pin.gpio.open.calledOnce);
+      const pin = getMockPin({ pin: PIN_NUMBER });
+      return Promise.using(pin.open(), () =>
+        assert(pin.gpio.openAsync.calledOnce, 'calls GPIO open once')
+      );
     });
 
-    it(`is opened in state ${PinState.LOW}`, () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
-      pin.open();
-      assert.equal(pin.state, PinState.LOW);
+    it(`is in the state ${PinState.INITIALIZED} after opening`, () => {
+      const pin = getMockPin({ pin: PIN_NUMBER });
+      return Promise.using(pin.open(), () => {
+        assert.equal(pin.state, PinState.INITIALIZED);
+      });
     });
 
-    it('throws when a GPIO exception is thrown', () => {
-      const pin = BrokePin({ pin: PIN_NUMBER });
-      assert.throws(() => pin.open());
+    it('rejects when a GPIO exception is thrown', () => {
+      const pin = getBrokePin({ pin: PIN_NUMBER });
+      assert.isRejected(Promise.using(pin.open(), () => {}));
     });
   });
 
   describe('close', () => {
     it('closes the GPIO address', () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
-      pin.open();
-      pin.close();
-      assert(pin.gpio.close.calledOnce);
+      const pin = getMockPin({ pin: PIN_NUMBER });
+      return pin.close()
+        .then(() => assert(pin.gpio.closeAsync.calledOnce, 'calls GPIO close once'));
     });
 
-    it(`is in state ${PinState.CLOSED} after closing`, () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
-      pin.open();
-      pin.close();
-      assert.equal(pin.state, PinState.CLOSED);
-    });
-
-    it('throws when a GPIO exception is thrown', () => {
-      const pin = BrokePin({ pin: PIN_NUMBER });
-      assert.throws(() => pin.close());
+    it('rejects when a GPIO exception is thrown', () => {
+      const pin = getBrokePin({ pin: PIN_NUMBER });
+      assert.isRejected(pin.close());
     });
   });
 
   describe('write', () => {
-    it('throws when an invalid value is provided', () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
-      pin.open();
-      assert.throws(() => pin.write('NONCE'));
+    it('rejects when an invalid value is provided', () => {
+      const pin = getMockPin({ pin: PIN_NUMBER });
+      assert.isRejected(pin.write('NONCE'));
     });
 
     it('opens the pin before writing and closes it after returning', () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
+      const pin = getMockPin({ pin: PIN_NUMBER });
       sinon.spy(pin, 'open');
       sinon.spy(pin, 'close');
-      pin.write(pin.highValue);
-      assert(pin.open.calledBefore(pin.gpio.write), 'calls GPIO open before writing');
-      assert(pin.close.calledAfter(pin.gpio.write), 'calls GPIO close after writing');
+      return pin.write(pin.highValue)
+        .then(() => {
+          assert(pin.open.calledBefore(pin.gpio.writeAsync), 'calls GPIO open before writing');
+          assert(pin.close.calledAfter(pin.gpio.writeAsync), 'calls GPIO close after writing');
+        });
     });
 
-    it('throws when a GPIO exception is thrown', () => {
-      const pin = BrokePin.props({
-        gpio: { open: sinon.stub() }
-      })({ pin: PIN_NUMBER });
-      pin.open();
-      assert.throws(() => pin.high());
+    it('rejects when a GPIO exception is thrown', () => {
+      const pin = getBrokePin({ pin: PIN_NUMBER });
+      assert.isRejected(pin.write(pin.highValue));
     });
   });
 
   describe('high', () => {
     it('writes to GPIO with its high value', () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
-      pin.open();
-      pin.high();
-      assert(pin.gpio.write.calledWith(PIN_NUMBER, pin.highValue));
+      const pin = getMockPin({ pin: PIN_NUMBER });
+      return pin.high()
+        .then(() => {
+          assert(pin.gpio.writeAsync.calledWith(PIN_NUMBER, pin.highValue));
+        });
     });
   });
 
   describe('low', () => {
     it('writes to GPIO with its low value', () => {
-      const pin = MockPin({ pin: PIN_NUMBER });
-      pin.open();
-      pin.low();
-      assert(pin.gpio.write.calledWith(PIN_NUMBER, pin.lowValue));
+      const pin = getMockPin({ pin: PIN_NUMBER });
+      return pin.low()
+        .then(() => {
+          assert(pin.gpio.writeAsync.calledWith(PIN_NUMBER, pin.lowValue));
+        });
     });
   });
 });
