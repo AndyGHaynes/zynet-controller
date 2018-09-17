@@ -5,7 +5,7 @@ const { LogLevel } = require('../../constants');
 const Pin = require('../../composables/pin');
 const PinController = require('../pin_controller');
 
-const PIN_NUMBER = 10;
+const P_INDEX = 10;
 
 const SilentPinController = PinController.props({ logLevel: LogLevel.SILENT });
 
@@ -30,7 +30,7 @@ describe('PinController', () => {
   describe('disposeAll', () => {
     it('closes and removes all pins after executing', () => {
       const pinController = MockPinController();
-      pinController.registerPin(PIN_NUMBER);
+      pinController.registerPin(P_INDEX);
       pinController.disposeAll();
       assert.isEmpty(pinController.pins, 'set of pins is empty');
     });
@@ -42,7 +42,7 @@ describe('PinController', () => {
           close: sinon.stub().throws(),
         }),
       })();
-      pinController.registerPin(PIN_NUMBER);
+      pinController.registerPin(P_INDEX);
       assert.doesNotThrow(() => pinController.disposeAll(), 'does not throw when close fails');
     });
   });
@@ -50,7 +50,7 @@ describe('PinController', () => {
   describe('disposePin', () => {
     it('removes pin from registry', () => {
       const pinController = MockPinController();
-      const pin = pinController.registerPin(PIN_NUMBER);
+      const pin = pinController.registerPin(P_INDEX);
       pinController.disposePin(pin);
       assert.notInclude(pinController.pins, pin, 'pin is no longer included in the set of pins');
     });
@@ -59,7 +59,7 @@ describe('PinController', () => {
   describe('registerPin', () => {
     it('adds pin to the registry', () => {
       const pinController = MockPinController();
-      const pin = pinController.registerPin(PIN_NUMBER);
+      const pin = pinController.registerPin(P_INDEX);
       assert.include(pinController.pins, pin, 'pin is included in the set of pins');
     });
   });

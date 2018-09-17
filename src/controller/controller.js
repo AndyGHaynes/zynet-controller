@@ -20,18 +20,18 @@ const Controller = stampit.compose(EventLogger, {
   },
   init() {
     const { leds, pidParams, relays } = this.config;
-    const pinProps = (pin) => ({ pin: this.registerPin(pin) });
+    const pinProps = (pIndex) => ({ pin: this.registerPin(pIndex) });
 
     this.pinController = this.PinController.props({ logLevel: this.logLevel })();
     this.leds = LEDArray.props({
       leds: _.map(leds, ({ color, pin }) => LED.props(pinProps(pin))({ color }))
     })();
-    this.relays = _.map(relays, ({ pin }) => Relay.props(pinProps(pin))());
+    this.relays = _.map(relays, ({ pIndex }) => Relay.props(pinProps(pIndex))());
     this.temperatureController = null;
   },
   methods: {
-    registerPin(pin) {
-      return this.pinController.registerPin(pin);
+    registerPin(pIndex) {
+      return this.pinController.registerPin(pIndex);
     },
     initializeTemperatureController(pidParams, targetTemperature) {
       this.temperatureController = this.TemperatureController(

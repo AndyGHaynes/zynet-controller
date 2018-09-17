@@ -16,14 +16,10 @@ const PinController = stampit.compose(EventLogger, {
       _.forEach(this.pins, (pin) => this.disposePin(pin));
     },
     disposePin(pin) {
-      try {
-        _.pull(this.pins, pin);
-      } catch (e) {
-        this.logError(e);
-      }
+      _.pull(this.pins, pin);
     },
-    registerPin(pinNumber) {
-      const pin = this.Pin.props({ logLevel: this.logLevel })({ pin: pinNumber });
+    registerPin(pIndex) {
+      const pin = this.Pin.props({ logLevel: this.logLevel })({ pIndex });
       this.pins.push(pin);
       return pin;
     },
