@@ -23,7 +23,7 @@ const PinController = stampit.compose(EventLogger, {
       }
     },
     registerPin(pinNumber) {
-      const pin = this.Pin.props({ debug: this.debug })({ pin: pinNumber });
+      const pin = this.Pin.props({ logLevel: this.logLevel })({ pin: pinNumber });
       this.pins.push(pin);
       return pin;
     },

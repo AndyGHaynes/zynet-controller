@@ -3,7 +3,7 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 
-const { GPIOType, PinState } = require('../../constants');
+const { GPIOType, LogLevel, PinState } = require('../../constants');
 const Pin = require('../pin');
 
 chai.use(chaiAsPromised);
@@ -15,7 +15,7 @@ const mockGPIOMethod = (rejects) =>
     : sinon.stub().resolves();
 
 const PIN_NUMBER = 10;
-const SilentPin = Pin.props({ test: true });
+const SilentPin = Pin.props({ logLevel: LogLevel.SILENT });
 const mockPin = (rejects) => SilentPin.props({
   gpio: {
     openAsync: mockGPIOMethod(rejects),

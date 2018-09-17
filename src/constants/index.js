@@ -17,6 +17,12 @@ const LEDType = {
   WARNING: 'LED_TYPE/WARNING',
 };
 
+const LogLevel = {
+  DEBUG: 'LOG_LEVEL/DEBUG',
+  ERROR: 'LOG_LEVEL/ERROR',
+  SILENT: 'LOG_LEVEL/SILENT',
+};
+
 const PIDParams = {
   PROPORTIONAL_GAIN: 'PID/PROPORTIONAL_GAIN',
   INTEGRAL_GAIN: 'PID/INTEGRAL_GAIN',
@@ -43,6 +49,7 @@ module.exports = {
   GPIOType,
   LEDColor,
   LEDType,
+  LogLevel,
   PIDParams,
   PIDState,
   PinState,

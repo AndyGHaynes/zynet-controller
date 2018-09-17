@@ -1,7 +1,7 @@
 const _ = require('lodash');
 
 const Controller = require('./src/controller/controller');
-const { LEDColor, PIDParams } = require('./src/constants');
+const { LEDColor, LogLevel, PIDParams } = require('./src/constants');
 
 const controllerConfig = {
   leds: [
@@ -29,7 +29,7 @@ const schedule = {
 
 const pi = Controller.props({
   config: controllerConfig,
-  debug: true,
+  logLevel: LogLevel.DEBUG,
 })();
 pi.leds.success();
 pi.initializeTemperatureController(pidConfig, schedule.mashTemperature);

@@ -1,16 +1,17 @@
 const stampit = require('@stamp/it');
 
+const { LogLevel } = require('../constants');
+
 const EventLogger = stampit({
   props: {
-    debug: false,
-    test: false,
+    logLevel: LogLevel.ERROR,
   },
   methods: {
     logDebug(...params) {
-      this.debug && console.debug(...params);
+      this.logLevel === LogLevel.DEBUG && console.debug(...params);
     },
     logError(...params) {
-      !this.test && console.error(...params);
+      this.logLevel !== LogLevel.SILENT && console.error(...params);
     },
   }
 });

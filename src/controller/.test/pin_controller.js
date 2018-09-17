@@ -1,12 +1,13 @@
 const { assert } = require('chai');
 const sinon = require('sinon');
 
+const { LogLevel } = require('../../constants');
 const Pin = require('../../composables/pin');
 const PinController = require('../pin_controller');
 
 const PIN_NUMBER = 10;
 
-const SilentPinController = PinController.props({ test: true });
+const SilentPinController = PinController.props({ logLevel: LogLevel.SILENT });
 
 describe('PinController', () => {
   let MockPinController;

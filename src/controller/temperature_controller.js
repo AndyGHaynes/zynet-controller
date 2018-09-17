@@ -16,7 +16,7 @@ const TemperatureController = stampit.compose(EventLogger, {
     this.pid = new this.PID(pidParams);
     this.relays = relays;
     this.targetTemperature = targetTemperature;
-    this.thermometer = this.Thermometer.props({ debug: this.debug })();
+    this.thermometer = this.Thermometer.props({ logLevel: this.logLevel })();
   },
   methods: {
     getTemperature() {

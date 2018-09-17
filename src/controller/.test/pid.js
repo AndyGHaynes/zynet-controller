@@ -1,7 +1,7 @@
 const { assert } = require('chai');
 const sinon = require('sinon');
 
-const { PIDState } = require('../../constants');
+const { LogLevel, PIDState } = require('../../constants');
 const PID = require('../pid');
 
 const PID_TARGET = 100;
@@ -15,7 +15,7 @@ const errorPIDController = sinon.stub();
 errorPIDController.prototype.setTarget = sinon.stub().throws();
 errorPIDController.prototype.update = sinon.stub().throws();
 
-const SilentPID = PID.props({ test: true });
+const SilentPID = PID.props({ logLevel: LogLevel.SILENT });
 const ValidPID = SilentPID.props({
   PIDController: mockPIDController,
 });

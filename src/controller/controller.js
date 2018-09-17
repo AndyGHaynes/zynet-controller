@@ -12,6 +12,7 @@ const Controller = stampit.compose(EventLogger, {
   props: {
     config: {
       leds: [],
+      pidParams: {},
       relays: [],
     },
     PinController,
@@ -21,7 +22,7 @@ const Controller = stampit.compose(EventLogger, {
     const { leds, pidParams, relays } = this.config;
     const pinProps = (pin) => ({ pin: this.registerPin(pin) });
 
-    this.pinController = this.PinController.props({ debug: this.debug })();
+    this.pinController = this.PinController.props({ logLevel: this.logLevel })();
     this.leds = LEDArray.props({
       leds: _.map(leds, ({ color, pin }) => LED.props(pinProps(pin))({ color }))
     })();
