@@ -35,12 +35,12 @@ describe('Pin', () => {
   describe('initialization', () => {
     it(`is created in state ${PinState.INITIALIZED}`, () => {
       const pin = getMockPin({ pin: PIN_NUMBER });
-      assert.equal(pin.state, PinState.INITIALIZED);
+      assert.equal(pin.state, PinState.INITIALIZED, `pin state is ${PinState.INITIALIZED}`);
     });
 
     it('is created with its pin number set', () => {
       const pin = getMockPin({ pin: PIN_NUMBER });
-      assert.equal(pin.pin, PIN_NUMBER);
+      assert.equal(pin.pin, PIN_NUMBER, 'pin set to passed in value');
     });
 
     it('throws when created without a pin number', () => {
@@ -59,7 +59,7 @@ describe('Pin', () => {
     it(`is in the state ${PinState.INITIALIZED} after opening`, () => {
       const pin = getMockPin({ pin: PIN_NUMBER });
       return Promise.using(pin.open(), () => {
-        assert.equal(pin.state, PinState.INITIALIZED);
+        assert.equal(pin.state, PinState.INITIALIZED, `pin state set to ${PinState.INITIALIZED}`);
       });
     });
 
@@ -110,7 +110,7 @@ describe('Pin', () => {
       const pin = getMockPin({ pin: PIN_NUMBER });
       return pin.high()
         .then(() => {
-          assert(pin.gpio.writeAsync.calledWith(PIN_NUMBER, pin.highValue));
+          assert(pin.gpio.writeAsync.calledWith(PIN_NUMBER, pin.highValue), 'calls GPIO write with high value');
         });
     });
   });
@@ -120,7 +120,7 @@ describe('Pin', () => {
       const pin = getMockPin({ pin: PIN_NUMBER });
       return pin.low()
         .then(() => {
-          assert(pin.gpio.writeAsync.calledWith(PIN_NUMBER, pin.lowValue));
+          assert(pin.gpio.writeAsync.calledWith(PIN_NUMBER, pin.lowValue), 'calls GPIO write with low value');
         });
     });
   });

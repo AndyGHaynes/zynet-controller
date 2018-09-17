@@ -15,7 +15,7 @@ describe('PinToggle', () => {
     it('writes high to the pin', () => {
       const pinToggle = MockPinToggle();
       pinToggle.on();
-      assert(pinToggle.pin.high.called);
+      assert(pinToggle.pin.high.called, 'calls pin.high()');
     });
   });
 
@@ -23,7 +23,7 @@ describe('PinToggle', () => {
     it('writes low to the pin', () => {
       const pinToggle = MockPinToggle();
       pinToggle.off();
-      assert(pinToggle.pin.low.called);
+      assert(pinToggle.pin.low.called, 'calls pin.low()');
     });
   });
 });
