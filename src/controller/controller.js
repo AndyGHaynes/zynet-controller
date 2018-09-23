@@ -1,48 +1,45 @@
 const stampit = require('@stamp/it');
 const _ = require('lodash');
 
-const EventLogger = require('../composables/event_logger');
 const LED = require('./led');
 const LEDArray = require('./led_array');
 const PinController = require('./pin_controller');
 const Relay = require('./relay');
 const TemperatureController = require('./temperature_controller');
 
-const Controller = stampit.compose(EventLogger, {
+const Controller = stampit.compose(PinController, {
   props: {
-    config: {
-      leds: [],
-      pidParams: {},
-      relays: [],
-    },
-    PinController,
+    LED,
+    LEDArray,
+    Relay,
     TemperatureController,
   },
-  init() {
-    const { leds, pidParams, relays } = this.config;
-    const pinProps = (pIndex) => ({ pin: this.registerPin(pIndex) });
-
-    this.pinController = this.PinController.props({ logLevel: this.logLevel })();
-    this.leds = LEDArray.props({
-      leds: _.map(leds, ({ color, pin }) => LED.props(pinProps(pin))({ color }))
+  init({ leds, pid, relays }) {
+    this.leds = this.LEDArray.props({
+      leds: _.map(
+        leds,
+        ({ color, pIndex }) => this.LED.props({
+          pin: this.registerPin(pIndex)
+        })({ color })
+      ),
     })();
-    this.relays = _.map(relays, ({ pIndex }) => Relay.props(pinProps(pIndex))());
-    this.temperatureController = null;
+    this.temperatureController = this.TemperatureController({
+      pidParams: pid,
+      relays: _.map(
+        relays,
+        ({ pIndex }) => this.Relay.props({
+          pin: this.registerPin(pIndex)
+        })()
+      ),
+    });
   },
   methods: {
-    registerPin(pIndex) {
-      return this.pinController.registerPin(pIndex);
-    },
-    initializeTemperatureController(pidParams, targetTemperature) {
-      this.temperatureController = this.TemperatureController(
-        pidParams,
-        this.relays,
-        targetTemperature
-      );
-      return this.temperatureController.initialize();
+    setTargetTemperature(temperature) {
+      return this.temperatureController.initialize()
+        .then(() => this.temperatureController.setTemperature(temperature));
     },
     shutdown() {
-      this.pinController.disposeAll();
+      this.disposeAll();
     },
   }
 });

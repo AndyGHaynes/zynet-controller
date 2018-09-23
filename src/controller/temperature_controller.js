@@ -1,4 +1,5 @@
 const stampit = require('@stamp/it');
+const Promise = require('bluebird');
 const _ = require('lodash');
 
 const { PIDState } = require('../constants');
@@ -11,10 +12,11 @@ const TemperatureController = stampit.compose(EventLogger, {
     PID,
     Thermometer,
   },
-  init(pidParams, relays, targetTemperature) {
+  init({ pidParams, relays, targetTemperature }) {
     this.lastRead = null;
     this.pid = new this.PID(pidParams);
     this.relays = relays;
+    this.sensorId = null;
     this.targetTemperature = targetTemperature;
     this.thermometer = this.Thermometer.props({ logLevel: this.logLevel })();
   },
@@ -23,9 +25,12 @@ const TemperatureController = stampit.compose(EventLogger, {
       return this.lastRead;
     },
     initialize() {
-      this.pid.setTarget(this.targetTemperature);
+      if (this.sensorId !== null) {
+        return Promise.resolve();
+      }
       return this.thermometer.initialize()
-        .then((sensorId) => this.logDebug(`thermometer ${sensorId} online`))
+        .tap((sensorId) => this.logDebug(`thermometer ${sensorId} online`))
+        .then((sensorId) => this.sensorId = sensorId)
         .catch(this.logError);
     },
     readTemperature() {
@@ -35,7 +40,7 @@ const TemperatureController = stampit.compose(EventLogger, {
         .catch(this.logError);
     },
     setLastRead(temperature) {
-      return { temperature, readAt: new Date() };
+      this.lastRead = { temperature, readAt: new Date() };
     },
     setRelays(pidState) {
       _.map(this.relays, (relay, i) => {
@@ -53,6 +58,9 @@ const TemperatureController = stampit.compose(EventLogger, {
             });
         }
       });
+    },
+    setTemperature(temperature) {
+      this.pid.setTarget(temperature);
     },
     update() {
       this.readTemperature()
