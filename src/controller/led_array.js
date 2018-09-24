@@ -3,7 +3,7 @@ const _ = require('lodash');
 
 const { LEDColor, LEDType } = require('../constants');
 
-const LEDArray = stampit.compose({
+const LEDArray = stampit({
   props: {
     colorMapping: {
       [LEDColor.BLUE]: LEDType.DATA,

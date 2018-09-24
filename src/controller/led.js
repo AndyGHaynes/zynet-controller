@@ -1,9 +1,12 @@
 const PinToggle = require('../composables/pin_toggle');
+const { EventType } = require('../constants');
 
-const LED = PinToggle.compose({
-  init({ color }) {
-    this.color = color;
-  }
+const LED = PinToggle.props({
+  errorEvent: EventType.LED_ERROR,
+  offEvent: EventType.LED_OFF,
+  onEvent: EventType.LED_ON,
+}).init(({ color }) => {
+  this.color = color;
 });
 
 module.exports = LED;

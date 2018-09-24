@@ -3,7 +3,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const rpio = Promise.promisifyAll(require('rpio'));
 
-const { PinState } = require('../constants');
+const { EventType, PinState } = require('../constants');
 const EventLogger = require('./event_logger');
 
 const Pin = stampit.compose(EventLogger, {
@@ -26,12 +26,23 @@ const Pin = stampit.compose(EventLogger, {
     this.setState(PinState.INITIALIZED);
   },
   methods: {
+    logPinEvent(event, error) {
+      this.logEvent(event, {
+        error,
+        pIndex: this.pIndex,
+        state: this.state,
+      });
+    },
     open() {
-      return Promise.resolve(this.gpio.openAsync(this.pIndex, this.output, this.lowValue))
+      return this.gpio.openAsync(this.pIndex, this.output, this.lowValue)
+        .tapCatch((e) => this.logPinEvent(EventType.PIN_ERROR, e))
+        .then(this.logPinEvent(EventType.PIN_OPEN))
         .disposer(() => this.close());
     },
     close() {
-      return this.gpio.closeAsync(this.pIndex, this.pinPreserve);
+      return this.gpio.closeAsync(this.pIndex, this.pinPreserve)
+        .then(() => this.logPinEvent(EventType.PIN_CLOSE))
+        .tapCatch((e) => this.logPinEvent(EventType.PIN_ERROR, e));
     },
     write(gpioValue) {
       return Promise.using(this.open(), () => {
@@ -40,16 +51,23 @@ const Pin = stampit.compose(EventLogger, {
             `Cannot set pin to ${gpioValue}, valid values are { HIGH: ${this.highValue}, LOW: ${this.lowValue} }`
           );
         }
-        return this.gpio.writeAsync(this.pIndex, gpioValue);
+        return this.gpio.writeAsync(this.pIndex, gpioValue)
+          .tapCatch((e) => this.logPinEvent(EventType.PIN_ERROR, e));
       });
     },
     high() {
       return this.write(this.highValue)
-        .then(() => this.setState(PinState.HIGH));
+        .then(() => {
+          this.logPinEvent(EventType.PIN_HIGH);
+          this.setState(PinState.HIGH);
+        });
     },
     low() {
       return this.write(this.lowValue)
-        .then(() => this.setState(PinState.LOW));
+        .then(() => {
+          this.logPinEvent(EventType.PIN_LOW);
+          this.setState(PinState.LOW);
+        });
     },
     isOn() {
       return this.state === PinState.HIGH;

@@ -1,7 +1,8 @@
 const stampit = require('@stamp/it');
+const _ = require('lodash');
 const PIDController = require('node-pid-controller');
 
-const { PIDParams, PIDState } = require('../constants');
+const { EventType, PIDParams, PIDState } = require('../constants');
 const EventLogger = require('../composables/event_logger');
 
 const PID = stampit.compose(EventLogger, {
@@ -16,30 +17,36 @@ const PID = stampit.compose(EventLogger, {
       k_d: pidParams[PIDParams.DERIVATIVE_GAIN],
       i_max: pidParams[PIDParams.INTEGRAL_GAIN],
     });
+    this.logPIDEvent(EventType.PID_PARAMETERS_SET);
     this.setpoint = null;
     this.state = PIDState.UNINITIALIZED;
     this.value = null;
   },
   methods: {
+    logPIDEvent(event, error) {
+      this.logEvent(event, {
+        error,
+        ..._.pick(this, 'pid', 'setpoint, state', 'value'),
+      });
+    },
     setTarget(value) {
       this.logDebug(`PID setpoint ${this.setpoint || 'null'} -> ${value}`);
       try {
-        this.pid.setTarget(value);
         if (this.setpoint === null) {
           this.setState(PIDState.READY);
         }
         this.setpoint = value;
+        this.pid.setTarget(value);
+        this.logPIDEvent(EventType.PID_TARGET_SET);
       } catch (e) {
-        this.logError(e);
+        this.logPIDEvent(EventType.PID_ERROR, e);
         this.setState(PIDState.ERROR);
       }
     },
     setState(pidState) {
-      this.logDebug(`PID state ${this.state} -> pidState`);
       this.state = pidState;
     },
     setValue(value) {
-      this.logDebug(`PID value ${this.value || 'null'} -> ${value}`);
       try {
         if (this.setpoint === null) {
           throw new Error('Cannot update PID value without a setpoint');
@@ -47,8 +54,9 @@ const PID = stampit.compose(EventLogger, {
         this.lastCorrection = this.pid.update(value);
         this.value = value;
         this.setState(this.lastCorrection > 0 ? PIDState.ON : PIDState.OFF);
+        this.logPIDEvent(EventType.PID_VALUE_CHANGED);
       } catch (e) {
-        this.logError(e);
+        this.logPIDEvent(EventType.PID_ERROR, e);
         this.setState(PIDState.ERROR);
       }
       return this.state;

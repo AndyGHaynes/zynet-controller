@@ -25,18 +25,18 @@ const TemperatureController = stampit.compose(EventLogger, {
       return this.lastRead;
     },
     initialize() {
-      if (this.sensorId !== null) {
+      if (this.isInitialized()) {
         return Promise.resolve();
       }
       return this.thermometer.initialize()
-        .tap((sensorId) => this.logDebug(`thermometer ${sensorId} online`))
-        .then((sensorId) => this.sensorId = sensorId)
-        .catch(this.logError);
+        .then((sensorId) => this.sensorId = sensorId);
+    },
+    isInitialized() {
+      return this.sensorId !== null;
     },
     readTemperature() {
       return this.thermometer.readTemperature()
         .tap((temperature) => this.setLastRead(temperature))
-        .return()
         .catch(this.logError);
     },
     setLastRead(temperature) {

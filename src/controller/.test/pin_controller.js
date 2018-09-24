@@ -1,3 +1,4 @@
+const Promise = require('bluebird');
 const { assert } = require('chai');
 const sinon = require('sinon');
 
@@ -36,28 +37,20 @@ describe('PinController', () => {
     it('closes and removes all pins after executing', () => {
       const pinController = MockPinController();
       pinController.registerPin(P_INDEX);
-      pinController.disposeAll();
-      assert.isEmpty(pinController.pins, 'set of pins is empty');
+      return pinController.disposeAll()
+        .then(() => assert.isEmpty(pinController.pins, 'set of pins is empty'));
     });
 
     it('logs and swallows any errors', () => {
       const pinController = MockPinController.props({
         Pin: Pin.methods({
-          open: sinon.stub(),
-          close: sinon.stub().throws(),
+          open: sinon.stub().resolves(),
+          close: sinon.stub().rejects(),
+          write: sinon.stub().resolves(),
         }),
       })();
       pinController.registerPin(P_INDEX);
-      assert.doesNotThrow(() => pinController.disposeAll(), 'does not throw when close fails');
-    });
-  });
-
-  describe('disposePin', () => {
-    it('removes pin from registry', () => {
-      const pinController = MockPinController();
-      const pin = pinController.registerPin(P_INDEX);
-      pinController.disposePin(pin);
-      assert.notInclude(pinController.pins, pin, 'pin is no longer included in the set of pins');
+      assert.isFulfilled(pinController.disposeAll(), 'does not throw when close fails');
     });
   });
 

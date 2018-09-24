@@ -1,3 +1,5 @@
+const { EventType } = require('./events');
+
 const GPIOType = {
   INPUT: 'GPIO_TYPE/INPUT',
   OUTPUT: 'GPIO_TYPE/OUTPUT',
@@ -46,6 +48,7 @@ const PinState = {
 };
 
 module.exports = {
+  EventType,
   GPIOType,
   LEDColor,
   LEDType,
