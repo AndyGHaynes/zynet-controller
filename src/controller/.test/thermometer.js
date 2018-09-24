@@ -21,8 +21,8 @@ const ValidThermometer = SilentThermometer.props({
 });
 const BrokeThermometer = SilentThermometer.props({
   ds18b20: {
-    sensorsAsync: sinon.stub().rejects(new Error('No thermometer detected')),
-    temperatureAsync: sinon.stub().rejects(new Error('Could not read temperature')),
+    sensorsAsync: sinon.stub().rejects(),
+    temperatureAsync: sinon.stub().rejects(),
   },
   sensorId: null,
 });
