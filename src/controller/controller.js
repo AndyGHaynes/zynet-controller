@@ -27,7 +27,6 @@ const Controller = stampit.compose(EventLogger, PinController, {
         ({ color, pIndex }) =>
           composePinToggle(this.LED, pIndex)({ color })
       ),
-      logLevel: this.logLevel,
     })();
     this.temperatureController = this.TemperatureController({
       pidParams: pid,
@@ -43,7 +42,7 @@ const Controller = stampit.compose(EventLogger, PinController, {
         .then(() => this.temperatureController.setTemperature(temperature));
     },
     shutdown() {
-      this.disposeAll();
+      return this.disposeAll();
     },
   }
 });
