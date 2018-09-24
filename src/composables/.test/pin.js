@@ -6,6 +6,8 @@ const sinon = require('sinon');
 const { GPIOType, LogLevel, PinState } = require('../../constants');
 const Pin = require('../pin');
 
+sinon.usingPromise(Promise);
+
 chai.use(chaiAsPromised);
 const { assert } = chai;
 

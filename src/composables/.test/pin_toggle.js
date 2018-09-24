@@ -1,12 +1,15 @@
+const Promise = require('bluebird');
 const { assert } = require('chai');
 const sinon = require('sinon');
 
 const PinToggle = require('../pin_toggle');
 
+sinon.usingPromise(Promise);
+
 const MockPinToggle = PinToggle.props({
   pin: {
-    high: sinon.spy(),
-    low: sinon.spy(),
+    high: sinon.stub().resolves(),
+    low: sinon.stub().resolves(),
   },
 });
 

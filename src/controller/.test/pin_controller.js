@@ -5,24 +5,29 @@ const { LogLevel } = require('../../constants');
 const Pin = require('../../composables/pin');
 const PinController = require('../pin_controller');
 
+sinon.usingPromise(Promise);
+
 const P_INDEX = 10;
 
-const SilentPinController = PinController.props({ logLevel: LogLevel.SILENT });
-
 describe('PinController', () => {
+  const SilentPinController = PinController.props({
+    logLevel: LogLevel.SILENT
+  });
   let MockPinController;
   let BrokePinController;
   beforeEach(() => {
     MockPinController = SilentPinController.props({
       Pin: Pin.methods({
-        open: sinon.stub(),
-        close: sinon.stub(),
+        open: sinon.stub().resolves(),
+        close: sinon.stub().resolves(),
+        write: sinon.stub().resolves(),
       }),
     });
     BrokePinController = SilentPinController.props({
       Pin: Pin.methods({
-        open: sinon.stub().throws(),
-        close: sinon.stub().throws(),
+        open: sinon.stub().rejects(),
+        close: sinon.stub().rejects(),
+        write: sinon.stub().rejects(),
       }),
     });
   });
