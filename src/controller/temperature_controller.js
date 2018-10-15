@@ -21,9 +21,6 @@ const TemperatureController = stampit.compose(EventLogger, {
     this.thermometer = this.Thermometer.props({ logLevel: this.logLevel })();
   },
   methods: {
-    getTemperature() {
-      return this.lastRead;
-    },
     initialize() {
       if (this.isInitialized()) {
         return Promise.resolve();
