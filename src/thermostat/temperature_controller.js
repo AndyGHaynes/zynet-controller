@@ -14,11 +14,13 @@ const TemperatureController = stampit.compose(EventLogger, {
   },
   init({ pidParams, relays, targetTemperature }) {
     this.lastRead = null;
-    this.pid = new this.PID(pidParams);
+    this.pid = this.PID.props({ logLevel: this.logLevel })(pidParams);
     this.relays = relays;
     this.sensorId = null;
-    this.targetTemperature = targetTemperature;
     this.thermometer = this.Thermometer.props({ logLevel: this.logLevel })();
+    if (targetTemperature) {
+      this.setTemperature(targetTemperature);
+    }
   },
   methods: {
     initialize() {
@@ -57,11 +59,12 @@ const TemperatureController = stampit.compose(EventLogger, {
       });
     },
     setTemperature(temperature) {
+      this.targetTemperature = temperature;
       this.pid.setTarget(temperature);
     },
     update() {
-      this.readTemperature()
-        .then((temperature) => {
+      return this.readTemperature()
+        .tap((temperature) => {
           this.pid.setValue(temperature);
           this.setRelays(this.pid.getState());
         })

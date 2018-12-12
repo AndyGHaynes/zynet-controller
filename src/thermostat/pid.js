@@ -23,14 +23,16 @@ const PID = stampit.compose(EventLogger, {
     this.value = null;
   },
   methods: {
+    getState() {
+      return this.state;
+    },
     logPIDEvent(event, error) {
       this.logEvent(event, {
         error,
-        ..._.pick(this, 'pid', 'setpoint, state', 'value'),
+        ..._.pick(this, 'setpoint', 'state', 'value'),
       });
     },
     setTarget(value) {
-      this.logDebug(`PID setpoint ${this.setpoint || 'null'} -> ${value}`);
       try {
         if (this.setpoint === null) {
           this.setState(PIDState.READY);
@@ -53,7 +55,7 @@ const PID = stampit.compose(EventLogger, {
         }
         this.lastCorrection = this.pid.update(value);
         this.value = value;
-        this.setState(this.lastCorrection > 0 ? PIDState.ON : PIDState.OFF);
+        this.setState(this.lastCorrection < 0 ? PIDState.ON : PIDState.OFF);
         this.logPIDEvent(EventType.PID_VALUE_CHANGED);
       } catch (e) {
         this.logPIDEvent(EventType.PID_ERROR, e);

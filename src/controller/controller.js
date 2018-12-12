@@ -6,7 +6,7 @@ const LED = require('./led');
 const LEDArray = require('./led_array');
 const PinController = require('./pin_controller');
 const Relay = require('./relay');
-const TemperatureController = require('./temperature_controller');
+const TemperatureController = require('../thermostat/temperature_controller');
 
 const Controller = stampit.compose(EventLogger, PinController, {
   props: {

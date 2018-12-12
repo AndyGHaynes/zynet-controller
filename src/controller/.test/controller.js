@@ -3,7 +3,7 @@ const sinon = require('sinon');
 
 const { LogLevel } = require('../../constants');
 const Controller = require('../controller');
-const TemperatureController = require('../temperature_controller');
+const TemperatureController = require('../../thermostat/temperature_controller');
 
 const TARGET_TEMP = 152;
 
