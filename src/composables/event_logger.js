@@ -18,6 +18,7 @@ const EventLogger = stampit({
       this.logLevel !== LogLevel.SILENT && console.error(...params);
     },
     logEvent(event, context) {
+      this.logDebug(`[${event}]`, _.pickBy(context));
       this.events.push({
         event,
         context: _.pickBy(context)
