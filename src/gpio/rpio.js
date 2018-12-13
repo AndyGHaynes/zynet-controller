@@ -21,12 +21,10 @@ const RPIO = stampit({
         .then(() => this.rpio.write(this.pIndex, gpioValue));
     },
     high() {
-      return this.write(this.rpio.HIGH)
-        .finally(() => this.close());
+      return this.write(this.rpio.HIGH);
     },
     low() {
-      return this.write(this.rpio.LOW)
-        .finally(() => this.close());
+      return this.write(this.rpio.LOW);
     },
   }
 });
