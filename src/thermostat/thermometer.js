@@ -34,7 +34,7 @@ const Thermometer = stampit.compose(EventLogger, {
           this.sensorId = sensorId;
         })
         .then(() => this.logThermometerEvent(EventType.THERMOMETER_INITIALIZED, null))
-        .catch((e) => this.logThermometerError(e));
+        .tapCatch((e) => this.logThermometerError(e));
     },
     readTemperature() {
       if (!this.sensorId) {

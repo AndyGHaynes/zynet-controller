@@ -11,6 +11,9 @@ module.exports = {
     { pIndex: 7 },
     { pIndex: 8 },
   ],
+  schedule: {
+    targetTemperature: 30,
+  },
   pid: {
     [PIDParams.PROPORTIONAL_GAIN]: 1.5,
     [PIDParams.INTEGRAL_GAIN]: 1,

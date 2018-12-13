@@ -7,6 +7,17 @@ const TemperatureController = require('../../thermostat/temperature_controller')
 
 const TARGET_TEMP = 152;
 
+const mockConfig = {
+  leds: [],
+  relays: [],
+  schedule: {
+    targetTemperature: TARGET_TEMP,
+  },
+  thermometer: {
+    readIntervalMS: 1000,
+  }
+};
+
 const SilentController = Controller.props({
   logLevel: LogLevel.SILENT,
   TemperatureController: TemperatureController.methods({
@@ -20,16 +31,12 @@ const SilentController = Controller.props({
 describe('Controller', () => {
   describe('setTargetTemperature', () => {
     it('initializes the temperature controller and sets target temperature', () => {
-      const controller = SilentController();
+      const controller = SilentController(mockConfig);
       return controller.setTargetTemperature(TARGET_TEMP)
         .then(() => {
           assert(
             controller.temperatureController.initialize.calledOnce,
             'calls initialize on the temperature controller'
-          );
-          assert(
-            controller.temperatureController.setTemperature.calledOnce,
-            'sets temperature on the temperature controller'
           );
         });
     });
@@ -37,7 +44,7 @@ describe('Controller', () => {
 
   describe('shutdown', () => {
     it('disposes registered pins', () => {
-      const controller = SilentController();
+      const controller = SilentController(mockConfig);
       return controller.shutdown()
         .then(() => assert(
           controller.disposeAll.calledOnce,
