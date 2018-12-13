@@ -16,5 +16,8 @@ module.exports = {
     [PIDParams.INTEGRAL_GAIN]: 1,
     [PIDParams.DERIVATIVE_GAIN]: 0.5,
     [PIDParams.MAX_INTEGRAL]: 3,
-  }
+  },
+  thermometer: {
+    readIntervalMS: 850,
+  },
 };

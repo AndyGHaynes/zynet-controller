@@ -3,7 +3,7 @@ const { assert } = require('chai');
 const sinon = require('sinon');
 
 const { LogLevel } = require('../../constants');
-const Pin = require('../../composables/pin');
+const Pin = require('../../gpio/pin');
 const PinController = require('../pin_controller');
 
 sinon.usingPromise(Promise);

@@ -11,6 +11,7 @@
   "dependencies": {
     "@stamp/it": "^1.0.3",
     "bluebird": "^3.5.1",
+    "chip-gpio": "^1.1.3",
     "ds18b20": "^0.1.0",
     "lodash": "^4.17.10",
     "node-pid-controller": "^1.0.1",
