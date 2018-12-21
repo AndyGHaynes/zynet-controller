@@ -7,7 +7,7 @@ const EventLogger = require('../composables/event_logger');
 const PID = require('./pid');
 const Thermometer = require('./thermometer');
 
-const TemperatureController = stampit.compose(EventLogger, {
+const Thermostat = stampit.compose(EventLogger, {
   props: {
     PID,
     Thermometer,
@@ -73,4 +73,4 @@ const TemperatureController = stampit.compose(EventLogger, {
   }
 });
 
-module.exports = TemperatureController;
+module.exports = Thermostat;

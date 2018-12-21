@@ -6,7 +6,7 @@ const LED = require('./led');
 const LEDArray = require('./led_array');
 const PinController = require('./pin_controller');
 const Relay = require('./relay');
-const TemperatureController = require('../thermostat/temperature_controller');
+const Thermostat = require('../thermostat/thermostat');
 
 const Controller = stampit.compose(EventLogger, PinController, {
   props: {
@@ -14,7 +14,7 @@ const Controller = stampit.compose(EventLogger, PinController, {
     LEDArray,
     Pin: null,
     Relay,
-    TemperatureController,
+    Thermostat,
   },
   init({ leds, relays, schedule, thermometer }) {
     this.config = {
@@ -37,7 +37,7 @@ const Controller = stampit.compose(EventLogger, PinController, {
       ({ pIndex }) => this.composePinToggle(this.Relay, pIndex)()
     );
 
-    this.temperatureController = this.TemperatureController
+    this.thermostat = this.Thermostat
       .props({ logLevel: this.logLevel })({
         pidParams: this.config.pid,
         relays: this.relays,
@@ -59,8 +59,10 @@ const Controller = stampit.compose(EventLogger, PinController, {
       });
     },
     setTargetTemperature(temperature) {
-      return this.temperatureController.initialize()
-        .then(() => this.temperatureController.setTemperature(temperature));
+      return this.thermostat.initialize()
+        .then(() => {
+          this.thermostat.setTemperature(temperature);
+        });
     },
     shutdown() {
       return this.disposeAll();

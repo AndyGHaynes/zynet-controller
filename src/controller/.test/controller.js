@@ -3,7 +3,7 @@ const sinon = require('sinon');
 
 const { LogLevel } = require('../../constants');
 const Controller = require('../controller');
-const TemperatureController = require('../../thermostat/temperature_controller');
+const TemperatureController = require('../../thermostat/thermostat');
 
 const TARGET_TEMP = 152;
 
@@ -35,7 +35,7 @@ describe('Controller', () => {
       return controller.setTargetTemperature(TARGET_TEMP)
         .then(() => {
           assert(
-            controller.temperatureController.initialize.calledOnce,
+            controller.thermostat.initialize.calledOnce,
             'calls initialize on the temperature controller'
           );
         });
