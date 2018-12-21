@@ -13,6 +13,9 @@ const Pin = stampit.compose(EventLogger, {
     this.setState(PinState.INITIALIZED);
   },
   methods: {
+    isHigh() {
+      return this.state === PinState.HIGH;
+    },
     logPinEvent(event, error) {
       this.logEvent(event, {
         error,
@@ -33,9 +36,6 @@ const Pin = stampit.compose(EventLogger, {
           this.logPinEvent(EventType.PIN_LOW);
           this.setState(PinState.LOW);
         });
-    },
-    isOn() {
-      return this.state === PinState.HIGH;
     },
     setState(state) {
       this.state = state;

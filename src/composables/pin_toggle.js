@@ -11,6 +11,9 @@ const PinToggle = stampit.compose(EventLogger, {
     pin: null,
   },
   methods: {
+    isOn() {
+      return this.pin.isHigh();
+    },
     logPinEvent(event, error) {
       this.logEvent(event, {
         error,
@@ -28,7 +31,7 @@ const PinToggle = stampit.compose(EventLogger, {
         .tapCatch((e) => this.logPinEvent(this.errorEvent, e));
     },
     toggle() {
-      return this.pin.isOn() ? this.off() : this.on();
+      return this.isOn() ? this.off() : this.on();
     }
   }
 });
