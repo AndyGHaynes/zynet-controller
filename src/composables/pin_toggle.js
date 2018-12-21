@@ -1,4 +1,5 @@
 const stampit = require('@stamp/it');
+const _ = require('lodash');
 
 const EventLogger = require('./event_logger');
 
@@ -11,7 +12,10 @@ const PinToggle = stampit.compose(EventLogger, {
   },
   methods: {
     logPinEvent(event, error) {
-      this.logEvent(event, { error, pin: this.pin });
+      this.logEvent(event, {
+        error,
+        pin: _.pick(this.pin, 'gpio', 'state'),
+      });
     },
     on() {
       return this.pin.high()
