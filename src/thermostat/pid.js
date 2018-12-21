@@ -29,7 +29,11 @@ const PID = stampit.compose(EventLogger, {
     logPIDEvent(event, error) {
       this.logEvent(event, {
         error,
-        ..._.pick(this, 'setpoint', 'state', 'value'),
+        ..._.assign(
+          _.pick(this, 'setpoint', 'state', 'value'), {
+            lastCorrection: _.round(this.lastCorrection, 3),
+          }
+        ),
       });
     },
     setTarget(value) {
