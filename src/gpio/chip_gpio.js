@@ -19,16 +19,20 @@ const ChipGPIO = stampit({
       return Promise.resolve(this.pin && this.pin.unexport());
     },
     write(gpioValue) {
-      return this.open()
-        .then(() => this.pin.write(gpioValue));
+      if (this.pin) {
+        return this.close()
+          .then(() => this.open())
+          .then(() => this.pin.write(gpioValue));
+      } else {
+        return this.open()
+          .then(() => this.pin.write(gpioValue));
+      }
     },
     high() {
-      return this.write(1)
-        .finally(() => this.close());
+      return this.write(1);
     },
     low() {
-      return this.write(0)
-        .finally(() => this.close());
+      return this.write(0);
     },
   }
 });
