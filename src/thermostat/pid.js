@@ -59,7 +59,7 @@ const PID = stampit.compose(EventLogger, {
         }
         this.lastCorrection = this.pid.update(value);
         this.value = value;
-        this.setState(this.lastCorrection < 0 ? PIDState.ON : PIDState.OFF);
+        this.setState(this.lastCorrection > 0 ? PIDState.OVER : PIDState.UNDER);
         this.logPIDEvent(EventType.PID_VALUE_CHANGED);
       } catch (e) {
         this.logPIDEvent(EventType.PID_ERROR, e);

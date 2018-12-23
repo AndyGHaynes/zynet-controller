@@ -44,11 +44,11 @@ const Thermostat = stampit.compose(EventLogger, {
     setRelays(pidState) {
       _.map(this.relays, (relay, i) => {
         switch (pidState) {
-          case PIDState.ON:
-            relay.on();
-            break;
-          case PIDState.OFF:
+          case PIDState.OVER:
             relay.off();
+            break;
+          case PIDState.UNDER:
+            relay.on();
             break;
           default:
             this.logError(`could not update relay ${i}`, {
