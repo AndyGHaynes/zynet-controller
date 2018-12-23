@@ -2,10 +2,10 @@ const { LEDColor, PIDParams } = require('./src/constants');
 
 module.exports = {
   leds: [
-    { color: LEDColor.RED, pIndex: 10 },
-    { color: LEDColor.YELLOW, pIndex: 11 },
-    { color: LEDColor.GREEN, pIndex: 12 },
-    { color: LEDColor.BLUE, pIndex: 13 },
+    { color: LEDColor.RED, pIndex: 31 },
+    { color: LEDColor.YELLOW, pIndex: 33 },
+    { color: LEDColor.GREEN, pIndex: 35 },
+    { color: LEDColor.BLUE, pIndex: 37 },
   ],
   relays: [
     { pIndex: 7 },
