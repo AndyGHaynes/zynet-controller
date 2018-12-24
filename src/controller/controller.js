@@ -60,14 +60,28 @@ const Controller = stampit.compose(EventLogger, PinController, {
     },
     setTargetTemperature(temperature) {
       return this.thermostat.initialize()
-        .then(() => {
-          this.thermostat.setTemperature(temperature);
-        });
+        .then(() => this.thermostat.setTemperature(temperature));
     },
     shutdown() {
+      this.stop();
       return this.disposeAll();
     },
-  }
+    start() {
+      return this.thermostat.initialize()
+        .then(() => {
+          this.temperatureReadInterval = setInterval(() => {
+            this.thermostat.update()
+              .then((temperature) => this.stateManager.readTemperature(temperature));
+          }, this.config.thermometer.readIntervalMS);
+        });
+    },
+    stop() {
+      if (this.temperatureReadInterval) {
+        clearInterval(this.temperatureReadInterval);
+      }
+      this.temperatureReadInterval = null;
+    },
+  },
 });
 
 module.exports = Controller;
