@@ -46,8 +46,6 @@ const Controller = stampit.compose(EventLogger, PinController, {
 
     // Timeout object for recurring thermometer reads
     this.temperatureReadInterval = null;
-
-    this.stateManager = this.StateManager();
   },
   methods: {
     composePinToggle(composable, pIndex) {
@@ -69,10 +67,10 @@ const Controller = stampit.compose(EventLogger, PinController, {
     start() {
       return this.thermostat.initialize()
         .then(() => {
-          this.temperatureReadInterval = setInterval(() => {
-            this.thermostat.update()
-              .then((temperature) => this.stateManager.readTemperature(temperature));
-          }, this.config.thermometer.readIntervalMS);
+          this.temperatureReadInterval = setInterval(
+            () => this.thermostat.update(),
+            this.config.thermometer.readIntervalMS
+          );
         });
     },
     stop() {
