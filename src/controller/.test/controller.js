@@ -3,7 +3,7 @@ const sinon = require('sinon');
 
 const { LogLevel } = require('../../constants');
 const Controller = require('../controller');
-const TemperatureController = require('../../thermostat/thermostat');
+const Thermostat = require('../../thermostat/thermostat');
 
 const TARGET_TEMP = 152;
 
@@ -20,7 +20,7 @@ const mockConfig = {
 
 const SilentController = Controller.props({
   logLevel: LogLevel.SILENT,
-  TemperatureController: TemperatureController.methods({
+  Thermostat: Thermostat.methods({
     initialize: sinon.stub().resolves(),
     setTemperature: sinon.stub().resolves(),
   }),
