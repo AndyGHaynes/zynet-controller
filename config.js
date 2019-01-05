@@ -1,4 +1,4 @@
-const { LEDColor, PIDParams } = require('./src/constants');
+const { LEDColor, LogLevel, PIDParams } = require('./src/constants');
 
 module.exports = {
   leds: [
@@ -7,6 +7,7 @@ module.exports = {
     { color: LEDColor.GREEN, pIndex: 35 },
     { color: LEDColor.BLUE, pIndex: 37 },
   ],
+  logLevel: LogLevel.DEBUG,
   relays: [
     { pIndex: 7 },
     { pIndex: 8 },
