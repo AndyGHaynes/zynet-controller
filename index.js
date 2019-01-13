@@ -2,13 +2,12 @@ const _ = require('lodash');
 
 const ControllerConfig = require('./config');
 const Controller = require('./src/controller/controller');
-const Pin = require('./src/gpio/pin');
-const RPIO = require('./src/gpio/rpio');
+const { RPIOPin } = require('./src/gpio');
 
 const { leds, logLevel, pid, relays, schedule, thermometer } = ControllerConfig;
 
 const pi = Controller.props({
-  Pin: Pin.props({ GPIO: RPIO }),
+  Pin: RPIOPin,
   logLevel,
 })({ leds, pid, relays, schedule, thermometer });
 pi.leds.success();
