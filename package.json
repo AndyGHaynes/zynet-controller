@@ -14,6 +14,7 @@
     "chip-gpio": "^1.1.3",
     "ds18b20": "^0.1.0",
     "lodash": "^4.17.10",
+    "moment": "^2.24.0",
     "node-pid-controller": "^1.0.1",
     "rpio": "^0.9.22"
   },
