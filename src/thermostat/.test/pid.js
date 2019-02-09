@@ -54,7 +54,7 @@ describe('PID', () => {
     });
   });
 
-  describe('updateValue', () => {
+  describe('setValue', () => {
     it('sets its value and return its state', () => {
       const pid = ValidPID();
       pid.setTarget(PID_TARGET);
