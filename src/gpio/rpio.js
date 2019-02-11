@@ -11,10 +11,14 @@ const RPIO = stampit({
   },
   methods: {
     open() {
-      return Promise.resolve(this.rpio.open(this.pIndex, this.rpio.OUTPUT, this.rpio.LOW));
+      return Promise.try(() =>
+        this.rpio.open(this.pIndex, this.rpio.OUTPUT, this.rpio.LOW)
+      );
     },
     close() {
-      return Promise.resolve(this.rpio.close(this.pIndex, this.rpio.PIN_PRESERVE));
+      return Promise.try(() =>
+        this.rpio.close(this.pIndex, this.rpio.PIN_PRESERVE)
+      );
     },
     write(gpioValue) {
       return this.rpio.read()
