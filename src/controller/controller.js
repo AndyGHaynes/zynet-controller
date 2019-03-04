@@ -2,17 +2,18 @@ const stampit = require('@stamp/it');
 const _ = require('lodash');
 
 const EventLogger = require('../composables/event_logger');
+const Pin = require('../gpio/pin');
+const Thermostat = require('../thermostat/thermostat');
 const LED = require('./led');
 const LEDArray = require('./led_array');
 const PinController = require('./pin_controller');
 const Relay = require('./relay');
-const Thermostat = require('../thermostat/thermostat');
 
 const Controller = stampit.compose(EventLogger, PinController, {
   props: {
     LED,
     LEDArray,
-    Pin: null,
+    Pin,
     Relay,
     Thermostat,
   },
