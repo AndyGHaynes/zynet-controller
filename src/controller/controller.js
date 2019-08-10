@@ -9,46 +9,51 @@ const LEDArray = require('./led_array');
 const PinController = require('./pin_controller');
 const Relay = require('./relay');
 
-const Controller = stampit.compose(EventLogger, PinController, {
-  props: {
+const Controller = stampit.compose(
+    EventLogger,
+    PinController,
+  )
+  .props({
     LED,
     LEDArray,
     Pin,
     Relay,
     Thermostat,
-  },
-  init({ leds, relays, schedule, thermometer }) {
-    this.config = {
+  })
+  .init(function (controllerConfig) {
+    const {
       leds,
+      pid,
       relays,
       schedule,
       thermometer,
-    };
+    } = controllerConfig;
 
     this.leds = this.LEDArray.props({
       leds: _.map(
-        this.config.leds,
+        leds,
         ({ color, pIndex }) =>
           this.composePinToggle(this.LED, pIndex)({ color })
       ),
     })();
 
     this.relays = _.map(
-      this.config.relays,
+      relays,
       ({ pIndex }) => this.composePinToggle(this.Relay, pIndex)()
     );
 
+    this.thermometerConfig = thermometer;
     this.thermostat = this.Thermostat
       .props({ logLevel: this.logLevel })({
-        pidParams: this.config.pid,
+        pidParams: pid,
         relays: this.relays,
-        targetTemperature: this.config.schedule.targetTemperature,
+        targetTemperature: schedule.targetTemperature,
       });
 
     // Timeout object for recurring thermometer reads
     this.temperatureReadInterval = null;
-  },
-  methods: {
+  })
+  .methods({
     composePinToggle(composable, pIndex) {
       return composable.props({
         logLevel: this.logLevel,
@@ -70,7 +75,7 @@ const Controller = stampit.compose(EventLogger, PinController, {
         .then(() => {
           this.temperatureReadInterval = setInterval(
             () => this.thermostat.update(),
-            this.config.thermometer.readIntervalMS
+            this.thermometerConfig.readIntervalMS
           );
         });
     },
@@ -80,7 +85,6 @@ const Controller = stampit.compose(EventLogger, PinController, {
       }
       this.temperatureReadInterval = null;
     },
-  },
-});
+  });
 
 module.exports = Controller;
