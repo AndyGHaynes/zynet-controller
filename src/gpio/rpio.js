@@ -1,18 +1,23 @@
+const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 const Promise = require('bluebird');
 const rpio = require('rpio');
 
-const RPIO = stampit({
-  props: {
-    rpio,
-  },
-  init({ pIndex }) {
-    this.pIndex = pIndex;
-  },
-  methods: {
+const GPIO = require('./gpio');
+
+const RPIO = stampit
+  .compose(
+    Configure.noPrivatize(),
+    GPIO.conf({
+      lowValue: rpio.LOW,
+      highValue: rpio.HIGH
+    }),
+  )
+  .props({ rpio })
+  .methods({
     open() {
       return Promise.try(() =>
-        this.rpio.open(this.pIndex, this.rpio.OUTPUT, this.rpio.LOW)
+        this.rpio.open(this.pIndex, this.rpio.OUTPUT, this.config.lowValue)
       );
     },
     close() {
@@ -21,17 +26,10 @@ const RPIO = stampit({
       );
     },
     write(gpioValue) {
-      return this.rpio.read()
+      return rpio.read()
         .catch(() => this.open())
         .then(() => this.rpio.write(this.pIndex, gpioValue));
     },
-    high() {
-      return this.write(this.rpio.HIGH);
-    },
-    low() {
-      return this.write(this.rpio.LOW);
-    },
-  }
-});
+  });
 
 module.exports = RPIO;

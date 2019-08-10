@@ -9,6 +9,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@stamp/configure": "^1.0.2",
     "@stamp/it": "^1.0.3",
     "bluebird": "^3.5.1",
     "chip-gpio": "^1.1.3",

@@ -1,6 +1,7 @@
-const { LEDColor, LogLevel, PIDParams } = require('./src/constants');
+const { HardwareProfile, LEDColor, LogLevel, PIDParams } = require('./src/constants');
 
 module.exports = {
+  hardwareProfile: HardwareProfile.PI,
   leds: [
     { color: LEDColor.RED, pIndex: 31 },
     { color: LEDColor.YELLOW, pIndex: 33 },

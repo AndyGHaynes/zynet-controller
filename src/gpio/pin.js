@@ -13,6 +13,10 @@ const Pin = stampit.compose(EventLogger, {
     this.setState(PinState.INITIALIZED);
   },
   methods: {
+    close() {
+      return this.gpio.close()
+        .then(() => this.setState(PinState.CLOSED));
+    },
     isHigh() {
       return this.state === PinState.HIGH;
     },

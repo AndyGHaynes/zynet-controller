@@ -3,6 +3,12 @@ const GPIOType = {
   OUTPUT: 'GPIO_TYPE/OUTPUT',
 };
 
+const HardwareProfile = {
+  CHIP: 'HARDWARE_PROFILE/CHIP',
+  DEBUG: 'HARDWARE_PROFILE/DEBUG',
+  PI: 'HARDWARE_PROFILE/PI',
+};
+
 const LEDColor = {
   BLUE: 'LED_COLOR/BLUE',
   GREEN: 'LED_COLOR/GREEN',
@@ -47,6 +53,7 @@ const PinState = {
 
 module.exports = {
   GPIOType,
+  HardwareProfile,
   LEDColor,
   LEDType,
   LogLevel,

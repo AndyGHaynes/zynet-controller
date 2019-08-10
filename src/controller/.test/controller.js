@@ -2,8 +2,9 @@ const { assert } = require('chai');
 const sinon = require('sinon');
 
 const { LogLevel } = require('../../constants');
-const Controller = require('../controller');
+const { mockPinController } = require('../../tests/mocks');
 const Thermostat = require('../../thermostat/thermostat');
+const Controller = require('../controller');
 
 const TARGET_TEMP = 152;
 
@@ -20,12 +21,13 @@ const mockConfig = {
 
 const SilentController = Controller.props({
   logLevel: LogLevel.SILENT,
+  PinController: mockPinController(false).methods({
+    disposeAll: sinon.stub().resolves(),
+  }),
   Thermostat: Thermostat.methods({
     initialize: sinon.stub().resolves(),
     setTemperature: sinon.stub().resolves(),
   }),
-}).methods({
-  disposeAll: sinon.stub().resolves(),
 });
 
 describe('Controller', () => {
@@ -47,7 +49,7 @@ describe('Controller', () => {
       const controller = SilentController(mockConfig);
       return controller.shutdown()
         .then(() => assert(
-          controller.disposeAll.calledOnce,
+          controller.pinController.disposeAll.calledOnce,
           'pin register disposes all pins'
         ));
     });

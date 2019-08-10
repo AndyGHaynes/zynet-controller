@@ -1,21 +1,33 @@
+const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 const Promise = require('bluebird');
-const _ = require('lodash');
 
-const PinController = stampit({
-  init() {
+const GPIO = require('../gpio/gpio');
+const Pin = require('../gpio/pin');
+
+const PinController = stampit
+  .compose(Configure.noPrivatize())
+  .configuration({
+    GPIO,
+  })
+  .init(function () {
     this.pins = [];
-  },
-  methods: {
+  })
+  .methods({
+    createPin(pIndex) {
+      return Pin.props({
+        GPIO: this.config.GPIO,
+      })({ pIndex });
+    },
     disposeAll() {
-      return Promise.all(_.invokeMap(this.pins, 'low'))
+      return Promise.map(this.pins, (pin) => pin.close())
         .then(() => this.pins = []);
     },
-    registerPin(pin) {
+    registerPin(pIndex) {
+      const pin = this.createPin(pIndex);
       this.pins.push(pin);
       return pin;
     },
-  }
-});
+  });
 
 module.exports = PinController;

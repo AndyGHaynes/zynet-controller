@@ -1,8 +1,9 @@
+const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 const _ = require('lodash');
 
 const EventLogger = require('../composables/event_logger');
-const Pin = require('../gpio/pin');
+const GPIO = require('../gpio/gpio');
 const Thermostat = require('../thermostat/thermostat');
 const LED = require('./led');
 const LEDArray = require('./led_array');
@@ -10,13 +11,16 @@ const PinController = require('./pin_controller');
 const Relay = require('./relay');
 
 const Controller = stampit.compose(
+    Configure.noPrivatize(),
     EventLogger,
-    PinController,
   )
+  .configuration({
+    GPIO,
+  })
   .props({
     LED,
     LEDArray,
-    Pin,
+    PinController,
     Relay,
     Thermostat,
   })
@@ -28,6 +32,10 @@ const Controller = stampit.compose(
       schedule,
       thermometer,
     } = controllerConfig;
+
+    this.pinController = this.PinController
+      .conf({ GPIO: this.config.GPIO })
+      .props({ logLevel: this.logLevel })();
 
     this.leds = this.LEDArray.props({
       leds: _.map(
@@ -57,9 +65,7 @@ const Controller = stampit.compose(
     composePinToggle(composable, pIndex) {
       return composable.props({
         logLevel: this.logLevel,
-        pin: this.registerPin(
-          this.Pin.props({ logLevel: this.logLevel })({ pIndex })
-        ),
+        pin: this.pinController.registerPin(pIndex),
       });
     },
     setTargetTemperature(temperature) {
@@ -68,7 +74,7 @@ const Controller = stampit.compose(
     },
     shutdown() {
       this.stop();
-      return this.disposeAll();
+      return this.pinController.disposeAll();
     },
     start() {
       return this.thermostat.initialize()
