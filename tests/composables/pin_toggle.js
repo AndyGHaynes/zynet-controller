@@ -1,10 +1,5 @@
-const Promise = require('bluebird');
-const { assert } = require('chai');
-const sinon = require('sinon');
-
-const PinToggle = require('../pin_toggle');
-
-sinon.usingPromise(Promise);
+const PinToggle = require('../../src/composables/pin_toggle');
+const { assert, sinon } = require('../utils');
 
 const MockPinToggle = PinToggle.props({
   pin: {

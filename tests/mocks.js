@@ -1,9 +1,9 @@
 const sinon = require('sinon');
 
-const { LogLevel } = require('../constants');
-const PinController = require('../controller/pin_controller');
-const GPIO = require('../gpio/gpio');
-const Pin = require('../gpio/pin');
+const { LogLevel } = require('../src/constants/index');
+const PinController = require('../src/controller/pin_controller');
+const GPIO = require('../src/gpio/gpio');
+const Pin = require('../src/gpio/pin');
 
 const mockGPIOMethod = (rejects) =>
   rejects

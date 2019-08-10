@@ -1,10 +1,5 @@
-const Promise = require('bluebird');
-const { assert } = require('chai');
-const sinon = require('sinon');
-
-const { mockPinController } = require('../../tests/mocks');
-
-sinon.usingPromise(Promise);
+const { mockPinController } = require('../mocks');
+const { assert } = require('../utils');
 
 const P_INDEX = 10;
 

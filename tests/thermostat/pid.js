@@ -1,8 +1,8 @@
 const { assert } = require('chai');
 const sinon = require('sinon');
 
-const { LogLevel, PIDState } = require('../../constants');
-const PID = require('../pid');
+const { LogLevel, PIDState } = require('../../src/constants/index');
+const PID = require('../../src/thermostat/pid');
 
 const PID_TARGET = 100;
 const PID_VALUE = 50;

@@ -2,8 +2,8 @@ const chai = require('chai');
 const chaiAsPromised = require('chai-as-promised');
 const sinon = require('sinon');
 
-const { LogLevel } = require('../../constants');
-const Thermometer = require('../thermometer');
+const { LogLevel } = require('../../src/constants/index');
+const Thermometer = require('../../src/thermostat/thermometer');
 
 chai.use(chaiAsPromised);
 const { assert } = chai;

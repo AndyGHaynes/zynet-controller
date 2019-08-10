@@ -1,16 +1,7 @@
-const Promise = require('bluebird');
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const sinon = require('sinon');
-
-const { PinState } = require('../../constants');
-const { mockPin } = require('../../tests/mocks');
-const Pin = require('../pin');
-
-sinon.usingPromise(Promise);
-
-chai.use(chaiAsPromised);
-const { assert } = chai;
+const { PinState } = require('../../src/constants/index');
+const Pin = require('../../src/gpio/pin');
+const { mockPin } = require('../mocks');
+const { assert } = require('../utils');
 
 const P_INDEX = 10;
 

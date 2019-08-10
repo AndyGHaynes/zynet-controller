@@ -1,10 +1,8 @@
-const { assert } = require('chai');
-const sinon = require('sinon');
-
-const { LogLevel } = require('../../constants');
-const { mockPinController } = require('../../tests/mocks');
-const Thermostat = require('../../thermostat/thermostat');
-const Controller = require('../controller');
+const { LogLevel } = require('../../src/constants/index');
+const Thermostat = require('../../src/thermostat/thermostat');
+const Controller = require('../../src/controller/controller');
+const { mockPinController } = require('../mocks');
+const { assert, sinon } = require('../utils');
 
 const TARGET_TEMP = 152;
 
