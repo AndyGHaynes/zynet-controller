@@ -7,9 +7,9 @@ sinon.usingPromise(Promise);
 
 chai.use(chaiAsPromised);
 
-const { assert } = chai;
+const { expect } = chai;
 
 module.exports = {
-  assert,
+  expect,
   sinon,
 };

@@ -1,5 +1,4 @@
-const { assert } = require('chai');
-const sinon = require('sinon');
+const { expect, sinon } = require('../utils');
 
 const { LogLevel, PIDState } = require('../../src/constants/index');
 const PID = require('../../src/thermostat/pid');
@@ -30,27 +29,27 @@ describe('PID', () => {
   describe('initialize', () => {
     it(`is created in state ${PIDState.UNINITIALIZED}`, () => {
       const pid = ValidPID();
-      assert.equal(pid.state, PIDState.UNINITIALIZED, `PID state is ${PIDState.UNINITIALIZED}`);
+      expect(pid.state).equal(PIDState.UNINITIALIZED);
     });
 
     it('throws when an exception is thrown', () => {
-      assert.throws(() => UninitializablePID());
+      expect(() => UninitializablePID()).throw();
     });
   });
 
   describe('setTarget', () => {
     it(`has a setpoint and goes to state ${PIDState.READY}`, () => {
       const pid = ValidPID();
-      assert.isNull(pid.setpoint);
+      expect(pid.setpoint).null;
       pid.setTarget(PID_TARGET);
-      assert.equal(pid.setpoint, PID_TARGET, 'PID setpoint matches value passed in');
-      assert.equal(pid.state, PIDState.READY, `PID state is ${PIDState.READY}`);
+      expect(pid.setpoint).equal(PID_TARGET);
+      expect(pid.state).equal(PIDState.READY);
     });
 
     it(`goes to state ${PIDState.ERROR} when an exception is thrown`, () => {
       const pid = BrokePID();
       pid.setTarget(PID_TARGET);
-      assert.equal(pid.state, PIDState.ERROR, `PID state is ${PIDState.ERROR}`);
+      expect(pid.state).equal(PIDState.ERROR);
     });
   });
 
@@ -58,20 +57,20 @@ describe('PID', () => {
     it('sets its value and return its state', () => {
       const pid = ValidPID();
       pid.setTarget(PID_TARGET);
-      assert.equal(pid.setValue(PID_VALUE), pid.state, 'sets and returns state');
-      assert.equal(pid.value, PID_VALUE, 'sets value passed in');
+      expect(pid.setValue(PID_VALUE)).equal(pid.state);
+      expect(pid.value).equal(PID_VALUE);
     });
 
     it(`goes to state ${PIDState.ERROR} when updated without a setpoint`, () => {
       const pid = ValidPID();
-      assert.equal(pid.setValue(PID_VALUE), PIDState.ERROR, `PID state is ${PIDState.ERROR}`);
+      expect(pid.setValue(PID_VALUE)).equal(PIDState.ERROR);
     });
 
     it(`goes to state ${PIDState.ERROR} when an exception is thrown`, () => {
       const pid = BrokePID();
       pid.setTarget(PID_TARGET);
       pid.setValue(PID_VALUE);
-      assert.equal(pid.state, PIDState.ERROR, `PID state is ${PIDState.ERROR}`);
+      expect(pid.state).equal(PIDState.ERROR);
     });
   });
 });

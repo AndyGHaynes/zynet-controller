@@ -2,7 +2,7 @@ const { LogLevel } = require('../../src/constants/index');
 const Thermostat = require('../../src/thermostat/thermostat');
 const Controller = require('../../src/controller/controller');
 const { mockPinController } = require('../mocks');
-const { assert, sinon } = require('../utils');
+const { expect, sinon } = require('../utils');
 
 const TARGET_TEMP = 152;
 
@@ -33,12 +33,7 @@ describe('Controller', () => {
     it('initializes the temperature controller and sets target temperature', () => {
       const controller = SilentController(mockConfig);
       return controller.setTargetTemperature(TARGET_TEMP)
-        .then(() => {
-          assert(
-            controller.thermostat.initialize.calledOnce,
-            'calls initialize on the temperature controller'
-          );
-        });
+        .then(() => expect(controller.thermostat.initialize.calledOnce));
     });
   });
 
@@ -46,10 +41,7 @@ describe('Controller', () => {
     it('disposes registered pins', () => {
       const controller = SilentController(mockConfig);
       return controller.shutdown()
-        .then(() => assert(
-          controller.pinController.disposeAll.calledOnce,
-          'pin register disposes all pins'
-        ));
+        .then(() => expect(controller.pinController.disposeAll.calledOnce));
     });
   });
 });

@@ -1,12 +1,6 @@
-const chai = require('chai');
-const chaiAsPromised = require('chai-as-promised');
-const sinon = require('sinon');
-
 const { LogLevel } = require('../../src/constants/index');
 const Thermometer = require('../../src/thermostat/thermometer');
-
-chai.use(chaiAsPromised);
-const { assert } = chai;
+const { expect, sinon } = require('../utils');
 
 const SENSOR_ID = 'SENSOR_ID';
 const TEMPERATURE = 50;
@@ -32,24 +26,24 @@ describe('Thermometer', () => {
     it('sets sensor ID upon initialization', () => {
       const thermometer = ValidThermometer();
       return thermometer.initialize()
-        .then(() => assert.equal(thermometer.sensorId, SENSOR_ID, 'sets sensor ID value to scanned ID'));
+        .then(() => expect(thermometer.sensorId).equal(SENSOR_ID));
     });
 
     it('throws on failed initialization', () => {
       const thermometer = BrokeThermometer();
-      return assert.isRejected(thermometer.initialize());
+      return expect(thermometer.initialize()).rejected;
     });
   });
 
   describe('readTemperature', () => {
     it('returns the current temperature', () => {
       const thermometer = ValidThermometer();
-      return assert.becomes(thermometer.readTemperature(), TEMPERATURE, 'returns value read from probe');
+      return expect(thermometer.readTemperature()).become(TEMPERATURE);
     });
 
     it('returns null when an exception is thrown', () => {
       const thermometer = BrokeThermometer();
-      return assert.becomes(thermometer.readTemperature(), null, 'returns null when thermometer read throws');
+      return expect(thermometer.readTemperature()).become(null);
     });
   });
 });
