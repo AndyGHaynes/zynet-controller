@@ -22,6 +22,9 @@ module.exports = {
   schedule: {
     targetTemperature: 30,
   },
+  server: {
+    port: 3000,
+  },
   thermometer: {
     readIntervalMS: 850,
   },

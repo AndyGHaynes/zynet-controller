@@ -1,6 +1,7 @@
 const ControllerConfig = require('./config');
 const Controller = require('./src/controller/controller');
 const { resolveGPIO } = require('./src/gpio/configure');
+const { initializeServer } = require('./src/server');
 
 const {
   hardwareProfile,
@@ -9,16 +10,16 @@ const {
   pid,
   relays,
   schedule,
+  server,
   thermometer,
 } = ControllerConfig;
 
-const pi = Controller
+const controller = Controller
   .conf({
-    gpio: resolveGPIO(hardwareProfile),
+    GPIO: resolveGPIO(hardwareProfile),
   })
   .props({
     logLevel,
   })({ leds, pid, relays, schedule, thermometer });
 
-pi.leds.success();
-pi.start();
+initializeServer(server, controller);

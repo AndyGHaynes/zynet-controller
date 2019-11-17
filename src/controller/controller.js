@@ -69,9 +69,15 @@ const Controller = stampit.compose(
         pin: this.pinController.registerPin(pIndex),
       });
     },
-    setTargetTemperature(temperature) {
-      return this.thermostat.initialize()
-        .then(() => this.thermostat.setTemperature(temperature));
+    getUpdate() {
+      const relays = _.map(this.relays, (relay) => ({
+        pin: relay.pin.gpio.pIndex,
+        is_on: !relay.isOn(), // still need to fix the reversed values...
+      }));
+      return {
+        relays,
+        thermostat: this.thermostat.getLastUpdate(),
+      };
     },
     shutdown() {
       this.stop();

@@ -1,6 +1,7 @@
 const stampit = require('@stamp/it');
 const Promise = require('bluebird');
 const _ = require('lodash');
+const moment = require('moment');
 
 const { PIDState } = require('../constants');
 const EventLogger = require('../composables/event_logger');
@@ -38,8 +39,14 @@ const Thermostat = stampit.compose(EventLogger, {
         .tap((temperature) => this.setLastRead(temperature))
         .catch(this.logError);
     },
+    getLastUpdate() {
+      return this.last_read || null;
+    },
     setLastRead(temperature) {
-      this.lastRead = { temperature, readAt: new Date() };
+      this.last_read = {
+        read_at: moment().utc().format(),
+        temperature,
+      };
     },
     setRelays(pidState) {
       _.map(this.relays, (relay, i) => {
