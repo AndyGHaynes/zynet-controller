@@ -1,5 +1,6 @@
 const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
+const Promise = require('bluebird');
 const _ = require('lodash');
 
 const EventLogger = require('../composables/event_logger');
@@ -77,6 +78,10 @@ const Controller = stampit.compose(
       return this.pinController.disposeAll();
     },
     start() {
+      // already initialized, no-op
+      if (this.temperatureReadInterval) {
+        return Promise.resolve();
+      }
       return this.thermostat.initialize()
         .then(() => {
           this.temperatureReadInterval = setInterval(
