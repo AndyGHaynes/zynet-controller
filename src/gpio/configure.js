@@ -1,3 +1,4 @@
+const { HardwareProfile } = require('../constants');
 const GPIO = require('./gpio');
 
 const resolveGPIO = (hardwareProfile) => ({
