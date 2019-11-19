@@ -85,6 +85,10 @@ const Controller = stampit.compose(
         thermostat: this.thermostat.getLastUpdate(),
       };
     },
+    setTargetTemperature(temperature) {
+      return this.thermostat.initialize()
+        .then(() => this.thermostat.setTemperature(temperature));
+    },
     shutdown() {
       console.warn('Shutting down, better luck next time.');
       this.stop();
