@@ -26,6 +26,7 @@ const PID = stampit.compose(EventLogger, {
     getState() {
       return this.state;
     },
+
     logPIDEvent(event, error) {
       this.logEvent(event, {
         error,
@@ -36,6 +37,7 @@ const PID = stampit.compose(EventLogger, {
         ),
       });
     },
+
     setTarget(value) {
       try {
         if (this.setpoint === null) {
@@ -49,9 +51,11 @@ const PID = stampit.compose(EventLogger, {
         this.setState(PIDState.ERROR);
       }
     },
+
     setState(pidState) {
       this.state = pidState;
     },
+
     setValue(value) {
       try {
         if (this.setpoint === null) {

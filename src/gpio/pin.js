@@ -17,9 +17,11 @@ const Pin = stampit.compose(EventLogger, {
       return this.gpio.close()
         .then(() => this.setState(PinState.CLOSED));
     },
+
     isHigh() {
       return this.state === PinState.HIGH;
     },
+
     logPinEvent(event, error) {
       this.logEvent(event, {
         error,
@@ -27,6 +29,7 @@ const Pin = stampit.compose(EventLogger, {
         state: this.state,
       });
     },
+
     high() {
       return this.gpio.high()
         .then(() => {
@@ -34,6 +37,7 @@ const Pin = stampit.compose(EventLogger, {
           this.setState(PinState.HIGH);
         });
     },
+
     low() {
       return this.gpio.low()
         .then(() => {
@@ -41,6 +45,7 @@ const Pin = stampit.compose(EventLogger, {
           this.setState(PinState.LOW);
         });
     },
+
     setState(state) {
       this.state = state;
     },

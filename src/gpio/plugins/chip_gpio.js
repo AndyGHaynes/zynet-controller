@@ -15,9 +15,11 @@ const ChipGPIO = stampit({
       return Promise.resolve(new this.gpio(this.pIndex, 'out', 1))
         .then((pin) => this.pin = pin);
     },
+
     close() {
       return Promise.resolve(this.pin && this.pin.unexport());
     },
+
     write(gpioValue) {
       if (this.pin) {
         return this.close()
@@ -28,9 +30,11 @@ const ChipGPIO = stampit({
           .then(() => this.pin.write(gpioValue));
       }
     },
+
     high() {
       return this.write(1);
     },
+
     low() {
       return this.write(0);
     },

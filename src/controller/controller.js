@@ -75,6 +75,7 @@ const Controller = stampit.compose(
         reversed,
       });
     },
+
     getUpdate() {
       const relays = _.map(this.relays, (relay) => ({
         pin: relay.pin.gpio.pIndex,
@@ -85,10 +86,12 @@ const Controller = stampit.compose(
         thermostat: this.thermostat.getLastUpdate(),
       };
     },
+
     setTargetTemperature(temperature) {
       return this.thermostat.initialize()
         .then(() => this.thermostat.setTemperature(temperature));
     },
+
     shutdown() {
       console.warn('Shutting down, better luck next time.');
       this.stop();
@@ -97,6 +100,7 @@ const Controller = stampit.compose(
         this.pinController.disposeAll(),
       ]);
     },
+
     start() {
       // already initialized, no-op
       if (this.temperatureReadInterval) {
@@ -110,6 +114,7 @@ const Controller = stampit.compose(
           );
         });
     },
+
     stop() {
       if (this.temperatureReadInterval) {
         clearInterval(this.temperatureReadInterval);

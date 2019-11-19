@@ -17,6 +17,7 @@ const Thermometer = stampit.compose(EventLogger, {
     logThermometerError(error) {
       this.logThermometerEvent(EventType.THERMOMETER_ERROR, null, error);
     },
+
     logThermometerEvent(event, temperature, error) {
       this.logEvent(event, {
         error,
@@ -24,6 +25,7 @@ const Thermometer = stampit.compose(EventLogger, {
         ..._.pick(this, 'sensorId'),
       });
     },
+
     initialize() {
       return this.ds18b20.sensorsAsync()
         .then((ids) => {
@@ -36,6 +38,7 @@ const Thermometer = stampit.compose(EventLogger, {
         .then(() => this.logThermometerEvent(EventType.THERMOMETER_INITIALIZED, null))
         .tapCatch((e) => this.logThermometerError(e));
     },
+
     readTemperature() {
       if (!this.sensorId) {
         this.logThermometerError(new Error('No initialized thermometers'));

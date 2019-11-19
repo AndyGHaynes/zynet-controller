@@ -19,10 +19,12 @@ const PinController = stampit
         GPIO: this.config.GPIO,
       })({ pIndex });
     },
+
     disposeAll() {
       return Promise.map(this.pins, (pin) => pin.close())
         .then(() => this.pins = []);
     },
+
     registerPin(pIndex) {
       const pin = this.createPin(pIndex);
       this.pins.push(pin);

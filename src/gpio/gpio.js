@@ -2,7 +2,7 @@ const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 
 const GPIO = stampit.compose(Configure.noPrivatize())
-  .conf({
+  .configuration({
     highValue: 1,
     lowValue: 0,
   })
@@ -16,6 +16,7 @@ const GPIO = stampit.compose(Configure.noPrivatize())
     high() {
       return this.write(this.config.highValue);
     },
+
     low() {
       return this.write(this.config.lowValue);
     },

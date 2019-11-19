@@ -31,23 +31,28 @@ const Thermostat = stampit.compose(EventLogger, {
       return this.thermometer.initialize()
         .then((sensorId) => this.sensorId = sensorId);
     },
+
     isInitialized() {
       return this.sensorId !== null;
     },
+
     readTemperature() {
       return this.thermometer.readTemperature()
         .tap((temperature) => this.setLastRead(temperature))
         .catch(this.logError);
     },
+
     getLastUpdate() {
       return this.last_read || null;
     },
+
     setLastRead(temperature) {
       this.last_read = {
         read_at: moment().utc().format(),
         temperature,
       };
     },
+
     setRelays(pidState) {
       _.map(this.relays, (relay, i) => {
         switch (pidState) {
@@ -69,10 +74,12 @@ const Thermostat = stampit.compose(EventLogger, {
         }
       });
     },
+
     setTemperature(temperature) {
       this.targetTemperature = temperature;
       this.pid.setTarget(temperature);
     },
+
     update() {
       return this.readTemperature()
         .tap((temperature) => {

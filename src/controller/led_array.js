@@ -20,15 +20,19 @@ const LEDArray = stampit({
     toggleLED(ledType) {
       this.indicators[ledType] && this.indicators[ledType].toggle();
     },
+
     data() {
       this.toggleLED(LEDType.DATA);
     },
+
     error() {
       this.toggleLED(LEDType.ERROR);
     },
+
     success() {
       this.toggleLED(LEDType.SUCCESS);
     },
+
     warn() {
       this.toggleLED(LEDType.WARNING);
     },

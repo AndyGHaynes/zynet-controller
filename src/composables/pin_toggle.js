@@ -15,25 +15,32 @@ const PinToggle = stampit.compose(EventLogger, {
     isOn() {
       return this.pin.isHigh();
     },
+
     logPinEvent(event, error) {
       this.logEvent(event, {
         error,
         pin: _.pick(this.pin, 'gpio', 'state'),
       });
     },
+
     on() {
       return (this.reversed ? this.pin.low() : this.pin.high())
         .then(() => this.logPinEvent(this.onEvent))
         .tapCatch((e) => this.logPinEvent(this.errorEvent, e));
     },
+
     off() {
       return (this.reversed ? this.pin.high() : this.pin.low())
         .then(() => this.logPinEvent(this.offEvent))
         .tapCatch((e) => this.logPinEvent(this.errorEvent, e));
     },
+
     toggle() {
-      return this.isOn() ? this.off() : this.on();
-    }
+      if (this.isOn()) {
+        return this.off();
+      }
+      return this.on();
+    },
   }
 });
 
