@@ -51,6 +51,11 @@ const PinState = {
   LOW: 'PIN_STATE/LOW',
 };
 
+const RelayType = {
+  NORMALLY_CLOSED: 'RELAY_TYPE/NORMALLY_CLOSED',
+  NORMALLY_OPEN: 'RELAY_TYPE/NORMALLY_OPEN',
+};
+
 module.exports = {
   GPIOType,
   HardwareProfile,
@@ -60,4 +65,5 @@ module.exports = {
   PIDParams,
   PIDState,
   PinState,
+  RelayType,
 };

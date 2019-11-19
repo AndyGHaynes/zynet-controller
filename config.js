@@ -1,4 +1,4 @@
-const { HardwareProfile, LEDColor, LogLevel, PIDParams } = require('./src/constants');
+const { HardwareProfile, LEDColor, LogLevel, PIDParams, RelayType } = require('./src/constants');
 
 module.exports = {
   hardwareProfile: HardwareProfile.PI,
@@ -16,8 +16,8 @@ module.exports = {
     [PIDParams.MAX_INTEGRAL]: 3,
   },
   relays: [
-    { pIndex: 7 },
-    { pIndex: 8 },
+    { pIndex: 7, type: RelayType.NORMALLY_CLOSED },
+    { pIndex: 8, type: RelayType.NORMALLY_CLOSED },
   ],
   schedule: {
     targetTemperature: 30,

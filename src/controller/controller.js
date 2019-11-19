@@ -3,6 +3,7 @@ const stampit = require('@stamp/it');
 const Promise = require('bluebird');
 const _ = require('lodash');
 
+const { RelayType } = require('../constants');
 const EventLogger = require('../composables/event_logger');
 const GPIO = require('../gpio/gpio');
 const Thermostat = require('../thermostat/thermostat');
@@ -42,13 +43,17 @@ const Controller = stampit.compose(
       leds: _.map(
         leds,
         ({ color, pIndex }) =>
-          this.composePinToggle(this.LED, pIndex)({ color })
+          this.composePinToggle({ composable: this.LED, pIndex })({ color })
       ),
     })();
 
     this.relays = _.map(
       relays,
-      ({ pIndex }) => this.composePinToggle(this.Relay, pIndex)()
+      ({ pIndex, type }) => this.composePinToggle({
+        composable: this.Relay,
+        pIndex,
+        reversed: type === RelayType.NORMALLY_CLOSED
+      })()
     );
 
     this.thermometerConfig = thermometer;
@@ -63,16 +68,17 @@ const Controller = stampit.compose(
     this.temperatureReadInterval = null;
   })
   .methods({
-    composePinToggle(composable, pIndex) {
+    composePinToggle({ composable, pIndex, reversed }) {
       return composable.props({
         logLevel: this.logLevel,
         pin: this.pinController.registerPin(pIndex),
+        reversed,
       });
     },
     getUpdate() {
       const relays = _.map(this.relays, (relay) => ({
         pin: relay.pin.gpio.pIndex,
-        is_on: !relay.isOn(), // still need to fix the reversed values...
+        is_on: relay.isOn(),
       }));
       return {
         relays,
