@@ -86,8 +86,12 @@ const Controller = stampit.compose(
       };
     },
     shutdown() {
+      console.warn('Shutting down, better luck next time.');
       this.stop();
-      return this.pinController.disposeAll();
+      return Promise.all([
+        _.map(this.relays, (relay) => relay.off()),
+        this.pinController.disposeAll(),
+      ]);
     },
     start() {
       // already initialized, no-op

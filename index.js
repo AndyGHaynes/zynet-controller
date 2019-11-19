@@ -23,3 +23,8 @@ const controller = Controller
   })({ leds, pid, relays, schedule, thermometer });
 
 initializeServer(server, controller);
+
+process.on('SIGINT', () =>
+  controller.shutdown()
+    .finally(() => process.exit())
+);
