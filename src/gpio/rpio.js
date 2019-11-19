@@ -26,8 +26,7 @@ const RPIO = stampit
       );
     },
     write(gpioValue) {
-      return Promise.try(() => this.rpio.read())
-        .catch(() => this.open())
+      return Promise.resolve(this.open())
         .then(() => this.rpio.write(this.pIndex, gpioValue));
     },
   });
