@@ -18,18 +18,13 @@ const mockGPIO = (rejects) => GPIO.methods({
   low: mockGPIOMethod(rejects),
 });
 
-const mockPin = (rejects) => Pin.props({
-  GPIO: mockGPIO(rejects),
-  logLevel: LogLevel.SILENT,
-});
+const mockPin = (rejects) => Pin
+  .conf({ GPIO: mockGPIO(rejects) })
+  .props({ logLevel: LogLevel.SILENT });
 
 const mockPinController = (rejects) => PinController
-  .conf({
-    GPIO: mockGPIO(rejects),
-  })
-  .props({
-    logLevel: LogLevel.SILENT,
-  });
+  .conf({ GPIO: mockGPIO(rejects) })
+  .props({ logLevel: LogLevel.SILENT });
 
 module.exports = {
   mockPin,

@@ -1,20 +1,26 @@
+const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 const _ = require('lodash');
 
 const { LEDColor, LEDType } = require('../constants');
 
-const LEDArray = stampit({
-  props: {
+const LEDArray = stampit(Configure.noPrivatize(), {
+  configuration: {
     colorMapping: {
       [LEDColor.BLUE]: LEDType.DATA,
       [LEDColor.GREEN]: LEDType.SUCCESS,
       [LEDColor.RED]: LEDType.ERROR,
       [LEDColor.YELLOW]: LEDType.WARNING,
     },
-    leds: [],
   },
   init() {
-    this.indicators = _.keyBy(this.leds, ({ color }) => this.colorMapping[color]);
+    this.indicators = _.keyBy(
+      this.leds,
+      ({ color }) => this.config.colorMapping[color]
+    );
+  },
+  props: {
+    leds: [],
   },
   methods: {
     toggleLED(ledType) {

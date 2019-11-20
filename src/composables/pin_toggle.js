@@ -1,10 +1,11 @@
+const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 const _ = require('lodash');
 
 const EventLogger = require('./event_logger');
 
-const PinToggle = stampit.compose(EventLogger, {
-  props: {
+const PinToggle = stampit(Configure.noPrivatize(), EventLogger, {
+  configuration: {
     errorEvent: null,
     offEvent: null,
     onEvent: null,
@@ -13,26 +14,28 @@ const PinToggle = stampit.compose(EventLogger, {
   },
   methods: {
     isOn() {
-      return this.pin.isHigh();
+      return this.config.pin.isHigh();
     },
 
     logPinEvent(event, error) {
       this.logEvent(event, {
         error,
-        pin: _.pick(this.pin, 'gpio', 'state'),
+        pin: _.pick(this.config.pin, 'gpio', 'state'),
       });
     },
 
     on() {
-      return (this.reversed ? this.pin.low() : this.pin.high())
-        .then(() => this.logPinEvent(this.onEvent))
-        .tapCatch((e) => this.logPinEvent(this.errorEvent, e));
+      const { errorEvent, onEvent, pin, reversed } = this.config;
+      return (reversed ? pin.low() : pin.high())
+        .then(() => this.logPinEvent(onEvent))
+        .tapCatch((e) => this.logPinEvent(errorEvent, e));
     },
 
     off() {
-      return (this.reversed ? this.pin.high() : this.pin.low())
-        .then(() => this.logPinEvent(this.offEvent))
-        .tapCatch((e) => this.logPinEvent(this.errorEvent, e));
+      const { errorEvent, offEvent, pin, reversed } = this.config;
+      return (reversed ? pin.high() : pin.low())
+        .then(() => this.logPinEvent(offEvent))
+        .tapCatch((e) => this.logPinEvent(errorEvent, e));
     },
 
     toggle() {

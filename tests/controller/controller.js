@@ -17,7 +17,7 @@ const mockConfig = {
   }
 };
 
-const SilentController = Controller.props({
+const SilentController = Controller.conf({
   logLevel: LogLevel.SILENT,
   PinController: mockPinController(false).methods({
     disposeAll: sinon.stub().resolves(),

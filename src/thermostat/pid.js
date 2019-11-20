@@ -1,3 +1,4 @@
+const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 const _ = require('lodash');
 const PIDController = require('node-pid-controller');
@@ -5,13 +6,13 @@ const PIDController = require('node-pid-controller');
 const { EventType, PIDParams, PIDState } = require('../constants');
 const EventLogger = require('../composables/event_logger');
 
-const PID = stampit.compose(EventLogger, {
-  props: {
+const PID = stampit(Configure.noPrivatize(), EventLogger, {
+  configuration: {
     PIDController,
   },
   init(pidParams) {
     this.lastCorrection = null;
-    this.pid = new this.PIDController({
+    this.pid = new this.config.PIDController({
       k_p: pidParams[PIDParams.PROPORTIONAL_GAIN],
       k_i: pidParams[PIDParams.INTEGRAL_GAIN],
       k_d: pidParams[PIDParams.DERIVATIVE_GAIN],

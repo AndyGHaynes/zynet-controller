@@ -1,9 +1,10 @@
+const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 const Promise = require('bluebird');
 const { Gpio } = require('chip-gpio');
 
-const ChipGPIO = stampit({
-  props: {
+const ChipGPIO = stampit(Configure.noPrivatize(), {
+  configuration: {
     gpio: Gpio,
   },
   init({ pIndex }) {
@@ -38,7 +39,7 @@ const ChipGPIO = stampit({
     low() {
       return this.write(0);
     },
-  }
+  },
 });
 
 module.exports = ChipGPIO;

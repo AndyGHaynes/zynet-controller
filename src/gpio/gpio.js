@@ -1,18 +1,16 @@
 const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 
-const GPIO = stampit.compose(Configure.noPrivatize())
-  .configuration({
+const GPIO = stampit(Configure.noPrivatize(), {
+  configuration: {
+    gpio: null,
     highValue: 1,
     lowValue: 0,
-  })
-  .props({
-    gpio: null,
-  })
-  .init(function ({ pIndex }) {
+  },
+  init({ pIndex }) {
     this.pIndex = pIndex;
-  })
-  .methods({
+  },
+  methods: {
     high() {
       return this.write(this.config.highValue);
     },
@@ -20,6 +18,7 @@ const GPIO = stampit.compose(Configure.noPrivatize())
     low() {
       return this.write(this.config.lowValue);
     },
-  });
+  },
+});
 
 module.exports = GPIO;

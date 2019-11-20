@@ -15,13 +15,13 @@ errorPIDController.prototype.setTarget = sinon.stub().throws();
 errorPIDController.prototype.update = sinon.stub().throws();
 
 const SilentPID = PID.props({ logLevel: LogLevel.SILENT });
-const ValidPID = SilentPID.props({
+const ValidPID = SilentPID.conf({
   PIDController: mockPIDController,
 });
-const BrokePID = SilentPID.props({
+const BrokePID = SilentPID.conf({
   PIDController: errorPIDController,
 });
-const UninitializablePID = SilentPID.props({
+const UninitializablePID = SilentPID.conf({
   PIDController: sinon.stub().throws(),
 });
 

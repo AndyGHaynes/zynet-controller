@@ -12,21 +12,16 @@ const LEDArray = require('./led_array');
 const PinController = require('./pin_controller');
 const Relay = require('./relay');
 
-const Controller = stampit.compose(
-    Configure.noPrivatize(),
-    EventLogger,
-  )
-  .configuration({
+const Controller = stampit(Configure.noPrivatize(), EventLogger, {
+  configuration: {
     GPIO,
-  })
-  .props({
     LED,
     LEDArray,
     PinController,
     Relay,
     Thermostat,
-  })
-  .init(function (controllerConfig) {
+  },
+  init(controllerConfig) {
     const {
       leds,
       pid,
@@ -35,29 +30,28 @@ const Controller = stampit.compose(
       thermometer,
     } = controllerConfig;
 
-    this.pinController = this.PinController
-      .conf({ GPIO: this.config.GPIO })
-      .props({ logLevel: this.logLevel })();
+    this.pinController = this.config.PinController
+      .conf({ GPIO: this.config.GPIO })();
 
-    this.leds = this.LEDArray.props({
+    this.leds = this.config.LEDArray.props({
       leds: _.map(
         leds,
         ({ color, pIndex }) =>
-          this.composePinToggle({ composable: this.LED, pIndex })({ color })
+          this.composePinToggle({ composable: this.config.LED, pIndex })({ color })
       ),
     })();
 
     this.relays = _.map(
       relays,
       ({ pIndex, type }) => this.composePinToggle({
-        composable: this.Relay,
+        composable: this.config.Relay,
         pIndex,
         reversed: type === RelayType.NORMALLY_CLOSED
       })()
     );
 
     this.thermometerConfig = thermometer;
-    this.thermostat = this.Thermostat
+    this.thermostat = this.config.Thermostat
       .props({ logLevel: this.logLevel })({
         pidParams: pid,
         relays: this.relays,
@@ -66,19 +60,18 @@ const Controller = stampit.compose(
 
     // Timeout object for recurring thermometer reads
     this.temperatureReadInterval = null;
-  })
-  .methods({
+  },
+  methods: {
     composePinToggle({ composable, pIndex, reversed }) {
-      return composable.props({
-        logLevel: this.logLevel,
+      return composable.conf({
         pin: this.pinController.registerPin(pIndex),
         reversed,
-      });
+      }).props({ logLevel: this.logLevel });
     },
 
     getUpdate() {
       const relays = _.map(this.relays, (relay) => ({
-        pin: relay.pin.gpio.pIndex,
+        pin: relay.config.pin.gpio.pIndex,
         is_on: relay.isOn(),
       }));
       return {
@@ -121,6 +114,7 @@ const Controller = stampit.compose(
       }
       this.temperatureReadInterval = null;
     },
-  });
+  },
+});
 
 module.exports = Controller;

@@ -6,14 +6,14 @@ const SENSOR_ID = 'SENSOR_ID';
 const TEMPERATURE = 50;
 
 const SilentThermometer = Thermometer.props({ logLevel: LogLevel.SILENT });
-const ValidThermometer = SilentThermometer.props({
+const ValidThermometer = SilentThermometer.conf({
   ds18b20: {
     sensorsAsync: sinon.stub().resolves([SENSOR_ID]),
     temperatureAsync: sinon.stub().resolves(TEMPERATURE),
   },
   sensorId: SENSOR_ID,
 });
-const BrokeThermometer = SilentThermometer.props({
+const BrokeThermometer = SilentThermometer.conf({
   ds18b20: {
     sensorsAsync: sinon.stub().rejects(),
     temperatureAsync: sinon.stub().rejects(),

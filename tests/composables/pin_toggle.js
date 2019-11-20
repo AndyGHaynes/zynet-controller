@@ -1,7 +1,7 @@
 const PinToggle = require('../../src/composables/pin_toggle');
 const { expect, sinon } = require('../utils');
 
-const MockPinToggle = PinToggle.props({
+const MockPinToggle = PinToggle.conf({
   pin: {
     high: sinon.stub().resolves(),
     low: sinon.stub().resolves(),
@@ -13,7 +13,7 @@ describe('PinToggle', () => {
     it('writes high to the pin', () => {
       const pinToggle = MockPinToggle();
       pinToggle.on();
-      expect(pinToggle.pin.high.called);
+      expect(pinToggle.config.pin.high.called);
     });
   });
 
@@ -21,7 +21,7 @@ describe('PinToggle', () => {
     it('writes low to the pin', () => {
       const pinToggle = MockPinToggle();
       pinToggle.off();
-      expect(pinToggle.pin.low.called);
+      expect(pinToggle.config.pin.low.called);
     });
   });
 });

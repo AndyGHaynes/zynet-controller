@@ -15,12 +15,8 @@ const {
 } = ControllerConfig;
 
 const controller = Controller
-  .conf({
-    GPIO: resolveGPIO(hardwareProfile),
-  })
-  .props({
-    logLevel,
-  })({ leds, pid, relays, schedule, thermometer });
+  .conf({ GPIO: resolveGPIO(hardwareProfile) })
+  .props({ logLevel })({ leds, pid, relays, schedule, thermometer });
 
 initializeServer(server, controller);
 

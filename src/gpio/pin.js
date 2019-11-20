@@ -1,14 +1,15 @@
+const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 
 const { EventType, PinState } = require('../constants');
 const EventLogger = require('../composables/event_logger');
 
-const Pin = stampit.compose(EventLogger, {
-  props: {
+const Pin = stampit(Configure.noPrivatize(), EventLogger, {
+  configuration: {
     GPIO: null,
   },
   init({ pIndex }) {
-    this.gpio = this.GPIO({ pIndex });
+    this.gpio = this.config.GPIO({ pIndex });
     this.state = null;
     this.setState(PinState.INITIALIZED);
   },

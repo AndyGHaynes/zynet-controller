@@ -1,3 +1,4 @@
+const Configure = require('@stamp/configure');
 const stampit = require('@stamp/it');
 const Promise = require('bluebird');
 const _ = require('lodash');
@@ -8,17 +9,17 @@ const EventLogger = require('../composables/event_logger');
 const PID = require('./pid');
 const Thermometer = require('./thermometer');
 
-const Thermostat = stampit.compose(EventLogger, {
-  props: {
+const Thermostat = stampit(Configure.noPrivatize(), EventLogger, {
+  configuration: {
     PID,
     Thermometer,
   },
   init({ pidParams, relays, targetTemperature }) {
     this.lastRead = null;
-    this.pid = this.PID.props({ logLevel: this.logLevel })(pidParams);
+    this.pid = this.config.PID.props({ logLevel: this.logLevel })(pidParams);
     this.relays = relays;
     this.sensorId = null;
-    this.thermometer = this.Thermometer.props({ logLevel: this.logLevel })();
+    this.thermometer = this.config.Thermometer.props({ logLevel: this.logLevel })();
     if (targetTemperature) {
       this.setTemperature(targetTemperature);
     }
@@ -88,7 +89,7 @@ const Thermostat = stampit.compose(EventLogger, {
         })
         .catch(this.logError);
     },
-  }
+  },
 });
 
 module.exports = Thermostat;
