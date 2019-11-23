@@ -60,7 +60,7 @@ const Thermostat = stampit(Configure.noPrivatize(), EventLogger, {
     },
 
     setRelays(pidState) {
-      _.map(this.relays, (relay, i) => {
+      _.each(this.relays, (relay, i) => {
         switch (pidState) {
           case PIDState.OVER:
             if (relay.isOn()) {
