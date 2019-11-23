@@ -16,7 +16,12 @@ const Thermostat = stampit(Configure.noPrivatize(), EventLogger, {
   },
   init({ pidParams, relays, targetTemperature }) {
     this.lastRead = null;
-    this.pid = this.config.PID.props({ logLevel: this.logLevel })(pidParams);
+    this.pid = this.config.PID.props({
+      logLevel: this.logLevel,
+      kP: pidParams[PIDParams.PROPORTIONAL_GAIN],
+      kI: pidParams[PIDParams.INTEGRAL_GAIN],
+      kD: pidParams[PIDParams.DERIVATIVE_GAIN],
+    })();
     this.relays = relays;
     this.sensorId = null;
     this.thermometer = this.config.Thermometer.props({ logLevel: this.logLevel })();
