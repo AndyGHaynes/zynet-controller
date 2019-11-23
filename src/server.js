@@ -12,7 +12,7 @@ function initializeServer({ port }, controller) {
 
   app.get('/update', (req, res, next) => {
     const lastUpdate = controller.getUpdate();
-    res.json({ last_update: lastUpdate });
+    res.json({ lastUpdate });
     next();
   });
 
