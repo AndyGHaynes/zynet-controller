@@ -23,6 +23,10 @@ const Pin = stampit(Configure.noPrivatize(), EventLogger, {
       return this.state === PinState.HIGH;
     },
 
+    isLow() {
+      return this.state === PinState.LOW;
+    },
+
     logPinEvent(event, error) {
       this.logEvent(event, {
         error,
