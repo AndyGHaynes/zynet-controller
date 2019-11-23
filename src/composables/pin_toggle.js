@@ -14,7 +14,11 @@ const PinToggle = stampit(Configure.noPrivatize(), EventLogger, {
   },
   methods: {
     isOn() {
-      return this.config.pin.isHigh();
+      const { pin, reversed } = this.config;
+      if (reversed) {
+        return pin.isLow();
+      }
+      return pin.isHigh();
     },
 
     logPinEvent(event, error) {
