@@ -1,14 +1,34 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const moment = require('moment');
+const WebSocket = require('ws');
+
+const BROADCAST_UPDATE_INTERVAL = moment.duration(5, 'seconds').asMilliseconds();
 
 const app = express();
 app.use(bodyParser.json());
 
-function initializeServer({ port }, controller) {
-  app.get('/alive', (req, res, next) => {
-    res.json({ alive: true });
-    next();
+function initializeWebSocketServer(controller, port) {
+  const wss = new WebSocket.Server({ port });
+  let updateInterval;
+
+  wss.on('connection', (ws) => {
+    updateInterval = setInterval(() => {
+      ws.send(JSON.stringify({
+        update: controller.getUpdate(),
+      }));
+    }, BROADCAST_UPDATE_INTERVAL);
   });
+
+  wss.on('close', () => {
+    if (updateInterval) {
+      clearInterval(updateInterval);
+    }
+  });
+}
+
+function initializeServer({ port }, controller) {
+  initializeWebSocketServer(controller, 4000);
 
   app.get('/update', (req, res, next) => {
     const lastUpdate = controller.getUpdate();
