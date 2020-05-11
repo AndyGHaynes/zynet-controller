@@ -28,18 +28,24 @@ const PinToggle = stampit(Configure.noPrivatize(), EventLogger, {
       });
     },
 
+    high() {
+      return this.config.pin.high()
+        .tapCatch((e) => this.logPinEvent(this.errorEvent, e));
+    },
+
+    low() {
+      return this.config.pin.low()
+        .tapCatch((e) => this.logPinEvent(this.errorEvent, e));
+    },
+
     on() {
-      const { errorEvent, onEvent, pin, reversed } = this.config;
-      return (reversed ? pin.low() : pin.high())
-        .then(() => this.logPinEvent(onEvent))
-        .tapCatch((e) => this.logPinEvent(errorEvent, e));
+      return (this.config.reversed ? this.low() : this.high())
+        .then(() => this.logPinEvent(this.onEvent));
     },
 
     off() {
-      const { errorEvent, offEvent, pin, reversed } = this.config;
-      return (reversed ? pin.high() : pin.low())
-        .then(() => this.logPinEvent(offEvent))
-        .tapCatch((e) => this.logPinEvent(errorEvent, e));
+      return (this.config.reversed ? this.high() : this.low())
+        .then(() => this.logPinEvent(this.offEvent));
     },
 
     toggle() {
