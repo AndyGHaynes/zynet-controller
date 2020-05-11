@@ -8,6 +8,7 @@ const TARGET_TEMP = 152;
 
 const mockConfig = {
   leds: [],
+  pid: {},
   relays: [],
   schedule: {
     targetTemperature: TARGET_TEMP,

@@ -6,6 +6,7 @@ const MockPinToggle = PinToggle.conf({
     high: sinon.stub().resolves(),
     low: sinon.stub().resolves(),
   },
+  reversed: false,
 });
 
 describe('PinToggle', () => {

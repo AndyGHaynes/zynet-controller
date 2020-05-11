@@ -38,7 +38,10 @@ describe('Thermometer', () => {
   describe('readTemperature', () => {
     it('returns the current temperature', () => {
       const thermometer = ValidThermometer();
-      return expect(thermometer.readTemperature()).become(TEMPERATURE);
+      return expect(
+        thermometer.initialize()
+          .then(() => thermometer.readTemperature())
+      ).become(TEMPERATURE);
     });
 
     it('returns null when an exception is thrown', () => {
