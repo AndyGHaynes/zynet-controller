@@ -4,7 +4,7 @@ const Promise = require('bluebird');
 const _ = require('lodash');
 const moment = require('moment');
 
-const { PIDState } = require('../constants');
+const { PIDParams, PIDState } = require('../constants');
 const EventLogger = require('../composables/event_logger');
 const PID = require('./pid');
 const Thermometer = require('./thermometer');
